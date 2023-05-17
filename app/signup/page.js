@@ -1,6 +1,6 @@
 'use client'
 import React from "react";
-import signIn from "src/firebase/auth/signin";
+import signUp from "src/firebase/auth/signup";
 import { useRouter } from 'next/navigation'
 
 function Page() {
@@ -11,7 +11,7 @@ function Page() {
     const handleForm = async (event) => {
         event.preventDefault()
 
-        const { result, error } = await signIn(email, password);
+        const { result, error } = await signUp(email, password);
 
         if (error) {
             return console.log(error)
@@ -33,10 +33,9 @@ function Page() {
                     <p>Password</p>
                     <input onChange={(e) => setPassword(e.target.value)} required type="password" name="password" id="password" placeholder="password" />
                 </label>
-                <button type="submit">Login</button>
+                <button type="submit">Sign up</button>
             </form>
         </div>
-
     </div>);
 }
 
