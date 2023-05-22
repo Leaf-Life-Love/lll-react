@@ -25,6 +25,8 @@ body {
     )
     rgb(var(--background-start-rgb));
   margin: 0;
+  z-index: 99;
+  position: absolute;
 }
 
 .scene{
@@ -34,4 +36,5 @@ body {
 
 .canvas {
   background: skyblue;
+  position: fixed;
 }
