@@ -6,9 +6,10 @@ import LightBulb from "src/components/lightbulb";
 import Controls from "src/components/controls";
 import Tower from "src/components/Tower";
 // import TextComponent from "src/components/potTemp";
-import Draggable from "src/components/dragcontrols";
-import {Suspense} from "react";
+// import Draggable from "src/components/dragcontrols";
+// import {Suspense} from "react";
 import './globals.css'
+
 
 export default function Home() {
     return (
@@ -19,6 +20,9 @@ export default function Home() {
                     camera={{position: [-6, 7, 7],}}
                     className="canvas"
                 >
+                    <gridHelper args={[20, 20]}/>
+                    <axesHelper args={[50]}/>
+                    <Controls/>
                     <ambientLight intensity={0.5} color={"white"}/>
                     <LightBulb position={[10, 15, 10]} />
                     <LightBulb position={[-10, 5, -10]}  />
@@ -35,7 +39,7 @@ export default function Home() {
                     {/*        <Box rotateX={3} rotateY={0.2}/>*/}
                     {/*    </Suspense>*/}
                     {/*</Draggable>*/}
-                    <Controls/>
+
                 </Canvas>
             </div>
         </main>

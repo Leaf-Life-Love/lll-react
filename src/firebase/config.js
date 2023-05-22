@@ -13,8 +13,8 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-let firebase_app = initializeApp(firebaseConfig);
-let db = getFirestore(firebase_app);
+const firebase_app = initializeApp(firebaseConfig);
+const db = getFirestore(firebase_app);
 
 export { db };
 export default firebase_app;
