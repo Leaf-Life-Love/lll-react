@@ -4,7 +4,7 @@ import Floor from 'src/components/floor'
 import Box from "src/components/box";
 import LightBulb from "src/components/lightbulb";
 import Controls from "src/components/controls";
-import Tower from "src/components/Tower";
+import Tower from "@/src/components/tower";
 // import TextComponent from "src/components/potTemp";
 // import Draggable from "src/components/dragcontrols";
 // import {Suspense} from "react";

@@ -5,7 +5,7 @@ import { GLTFLoader} from "three/examples/jsm/loaders/GLTFLoader";
 function Tower(props){
     const model = useLoader(GLTFLoader, "/models/tower.glb")
     return (
-        <primitive object={model.scene} scale={10} />
+        <primitive object={model.scene} scale={10} {...props}/>
     )
 }
 export default Tower;
