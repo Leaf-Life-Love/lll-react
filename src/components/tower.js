@@ -1,11 +1,14 @@
 import React from "react";
-import { useLoader } from "@react-three/fiber";
-import { GLTFLoader} from "three/examples/jsm/loaders/GLTFLoader";
+import {useLoader} from "@react-three/fiber";
+import {GLTFLoader} from "three/examples/jsm/loaders/GLTFLoader";
 
-function Tower(props){
+function Tower(props) {
     const model = useLoader(GLTFLoader, "/models/tower.glb")
     return (
-        <primitive object={model.scene} scale={10} {...props}/>
+        <mesh {...props} castShadow={true} receiveShadow={true} scale={10}>
+            <primitive object={model.scene}/>
+        </mesh>
     )
 }
+
 export default Tower;

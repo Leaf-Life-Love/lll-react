@@ -3,38 +3,84 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+    --foreground-rgb: 0, 0, 0;
+    --background-start-rgb: 214, 219, 220;
+    --background-end-rgb: 255, 255, 255;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+    :root {
+        --foreground-rgb: 255, 255, 255;
+        --background-start-rgb: 0, 0, 0;
+        --background-end-rgb: 0, 0, 0;
+    }
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-  margin: 0;
-  z-index: 99;
-  position: absolute;
+    color: rgb(var(--foreground-rgb));
+    background: linear-gradient(
+            to bottom,
+            transparent,
+            rgb(var(--background-end-rgb))
+    ) rgb(var(--background-start-rgb));
+    margin: 0;
+    z-index: 99;
+    position: absolute;
 }
 
-.scene{
-  width: 100vw;
-  height: 100vh;
+.scene {
+    width: 100vw;
+    height: 100vh;
 }
 
 .canvas {
-  background: skyblue;
-  position: fixed;
+    background: skyblue;
+    position: fixed;
+}
+
+.rounded-logo {
+    @apply
+    border-4
+    border-green-500
+    rounded-full
+    w-[150px]
+    h-[150px]
+    object-cover;
+}
+
+.loading-container {
+    @apply
+    flex
+    flex-col
+    items-center
+    justify-center
+    h-screen
+    w-screen;
+}
+
+.loading-logo {
+    @apply
+    mb-5
+}
+
+.progress-bar {
+    @apply
+    w-[200px]
+    h-2
+    bg-white
+    rounded
+    overflow-hidden;
+}
+
+.progress {
+    @apply
+    h-full
+    bg-[#5c90ff]
+}
+
+.loading-text {
+    @apply
+    mt-2.5
+    text-white
+    text-lg
 }

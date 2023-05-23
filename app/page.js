@@ -1,20 +1,19 @@
 'use client'
-import React, {useEffect, useRef} from "react";
+import React, {Suspense, useEffect, useRef} from "react";
 import {getAuth, signInWithPopup, signInWithRedirect, OAuthProvider, getRedirectResult} from "firebase/auth";
-import {Html} from "@react-three/drei";
+import {Html, Text, Text3D, Center, Loader} from "@react-three/drei";
 import {Canvas} from '@react-three/fiber'
 import Floor from 'src/components/floor'
-import Box from "src/components/box";
 import LightBulb from "src/components/lightbulb";
 import Controls from "src/components/controls";
-import Tower from "@/src/components/tower";
-// import TextComponent from "src/components/potTemp";
+import Tower from "src/components/tower";
+import LoadingScreen from "src/components/loadingscreen";
 import './globals.css'
-import {doc} from "firebase/firestore";
+
 
 export default function Home() {
     const auth = getAuth();
-    const loginButtonRef = useRef(null);
+    // const loginButtonRef = useRef(null);
 
     const provider = new OAuthProvider('microsoft.com');
     provider.setCustomParameters({
@@ -40,12 +39,12 @@ export default function Home() {
             console.log(error)
         });
 
-    useEffect(() => {
-        if (auth.currentUser != null && loginButtonRef.current) {
-            loginButtonRef.current.style.display = "none";
-        }
+    const handelLoginButton = () => {
+        signInWithPopup(auth, provider)
+    }
 
-        //check if browser supports webgl
+    useEffect(() => {
+        //checks if browser supports webgl
         if (!window.WebGLRenderingContext) {
             // the browser doesn't even know what WebGL is
             alert("WebGL is not supported. If you need help, go to: https://get.webgl.org/troubleshooting")
@@ -59,32 +58,34 @@ export default function Home() {
         }
     }, [auth]);
 
-
     return (
         <main>
             <div id="canvas-container" className="scene">
                 <Canvas
                     shadows={true}
-                    camera={{position: [-6, 7, 7],}}
+                    colorManagement
+                    camera={{position: [15, 7, 0],}}
                     className="canvas"
                 >
-                    <Html
-                        as={"div"}
-                    >
-                        <button onClick={() => {
-                            signInWithPopup(auth, provider)
-                        }} id="login" ref={loginButtonRef}>Login
-                        </button>
-                    </Html>
-                    <gridHelper args={[20, 20]}/>
-                    <axesHelper args={[50]}/>
-                    <Controls/>
-                    <ambientLight intensity={0.5} color={"white"}/>
-                    <LightBulb position={[10, 15, 10]}/>
-                    <LightBulb position={[-10, 5, -10]}/>
-                    <Floor position={[0, -4, 0]}/>
-                    <Tower position={[0, 0, 0]}/>
+                    <Suspense fallback={<LoadingScreen/>}>
+                        {/*<Html>*/}
+                        {/*    <button onClick={() => {*/}
+                        {/*        signInWithPopup(auth, provider)*/}
+                        {/*    }} id="login" ref={loginButtonRef}>Login*/}
+                        {/*    </button>*/}
+                        {/*</Html>*/}
+                        <Text position={[8.7, -4, 10.01]} onClick={handelLoginButton}>Login</Text>
+                        <gridHelper args={[20, 20]}/>
+                        <axesHelper args={[50]}/>
+                        <Controls/>
+                        <ambientLight intensity={0.2} color={"white"}/>
+                        <LightBulb position={[10, 15, 10]}/>
+                        <LightBulb position={[-10, 5, -10]}/>
+                        <Tower position={[0, 0, 0]}/>
+                        <Floor position={[0, -4, 0]}/>
+                    </Suspense>
                 </Canvas>
+                <Loader/>
             </div>
         </main>
     )
