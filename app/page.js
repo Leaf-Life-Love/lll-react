@@ -1,7 +1,7 @@
 'use client'
-import React, {Suspense, useEffect, useRef} from "react";
-import {getAuth, signInWithPopup, signInWithRedirect, OAuthProvider, getRedirectResult} from "firebase/auth";
-import {Html, Text, Text3D, Center, Loader} from "@react-three/drei";
+import React, {Suspense, useEffect, useState} from "react";
+import {getAuth, signInWithPopup, OAuthProvider, getRedirectResult} from "firebase/auth";
+import {Html, Text, Loader} from "@react-three/drei";
 import {Canvas} from '@react-three/fiber'
 import Floor from 'src/components/floor'
 import LightBulb from "src/components/lightbulb";
@@ -13,14 +13,26 @@ import './globals.css'
 
 export default function Home() {
     const auth = getAuth();
-    // const loginButtonRef = useRef(null);
-
     const provider = new OAuthProvider('microsoft.com');
+    const [tempValue, setTempValue] = useState(30);
+
+    const tempDeg = () =>{
+        const minTemp = 0;
+        const maxTemp = 30;
+        const minDeg = -90;
+        const maxDeg = 90;
+        const Deg = (tempValue - minTemp) * (maxDeg - minDeg) / (maxTemp - minTemp) + minDeg;
+
+        if (Deg > maxDeg || tempValue > maxTemp) {
+            return maxDeg;
+        }
+        if (Deg < minDeg || tempValue < minTemp) {
+            return minDeg;
+        }
+        return Deg;
+    }
+
     provider.setCustomParameters({
-        // Optional "tenant" parameter in case you are using an Azure AD tenant.
-        // eg. '8eaef023-2b34-4da1-9baa-8bc8c9d6a490' or 'contoso.onmicrosoft.com'
-        // or "common" for tenant-independent tokens.
-        // The default value is "common".
         prompt: 'consent',
         tenant: 'e8e5eb49-74bd-45b9-905a-1193cb5a9913',
     });
@@ -44,6 +56,8 @@ export default function Home() {
     }
 
     useEffect(() => {
+        setTempValue(10)
+
         //checks if browser supports webgl
         if (!window.WebGLRenderingContext) {
             // the browser doesn't even know what WebGL is
@@ -60,20 +74,24 @@ export default function Home() {
 
     return (
         <main>
+            <div className="data-container">
+                <div className="temp-container">
+                    <div className="outer-circle">
+                        <div className="temp-value" style={{ transform: `rotate(${tempDeg()}deg)`}}>
+                            <div className="temp-circle"></div>
+                        </div>
+                        <div className="inner-circle">{tempValue}&#8451;</div>
+                    </div>
+                    <div className="bottom-border"></div>
+                </div>
+            </div>
             <div id="canvas-container" className="scene">
                 <Canvas
                     shadows={true}
-                    colorManagement
                     camera={{position: [15, 7, 0],}}
                     className="canvas"
                 >
                     <Suspense fallback={<LoadingScreen/>}>
-                        {/*<Html>*/}
-                        {/*    <button onClick={() => {*/}
-                        {/*        signInWithPopup(auth, provider)*/}
-                        {/*    }} id="login" ref={loginButtonRef}>Login*/}
-                        {/*    </button>*/}
-                        {/*</Html>*/}
                         <Text position={[8.7, -4, 10.01]} onClick={handelLoginButton}>Login</Text>
                         <gridHelper args={[20, 20]}/>
                         <axesHelper args={[50]}/>
