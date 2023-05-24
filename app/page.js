@@ -54,24 +54,34 @@ export default function Home() {
         const dataContainer = document.querySelector('.data-container')
         const historyContainer = document.querySelector('.history-container')
 
-        // if (dataContainer.classList.contains('hidden') && historyContainer.classList.contains('block')) {
-            historyContainer.classList.toggle('flip')
-            dataContainer.classList.toggle('hidden')
-            dataContainer.classList.toggle('block')
-            dataContainer.classList.toggle('flex')
+        dataContainer.classList.toggle('flip')
+        dataContainer.classList.toggle('flip2')
+        // dataContainer.classList.toggle('hidden')
+        // dataContainer.classList.toggle('block')
+        dataContainer.classList.toggle('flex')
+        // dataContainer.classList.toggle('z-[49]')
+        dataContainer.classList.toggle('z-50')
+        dataContainer.classList.toggle('rotateY-180')
 
-        // }
+        historyContainer.classList.toggle('flip')
+        historyContainer.classList.toggle('flip2')
+        // historyContainer.classList.toggle('hidden')
+        // historyContainer.classList.toggle('block')
+        historyContainer.classList.toggle('flex')
+        // historyContainer.classList.toggle('z-[49]')
+        historyContainer.classList.toggle('z-50')
+        historyContainer.classList.toggle('rotateY-180')
 
-        // if (historyContainer.classList.contains('hidden') && dataContainer.classList.contains('block')) {
-            dataContainer.classList.toggle('flip')
-            historyContainer.classList.toggle('hidden')
-            historyContainer.classList.toggle('block')
-            historyContainer.classList.toggle('flex')
-        // }
+        // dataContainer.addEventListener("animationend", function() {
+        //     dataContainer.classList.toggle('z-50')
+        // });
+        //
+        // historyContainer.addEventListener("animationend", function() {
+        //     historyContainer.classList.toggle('z-50')
+        // });
     }
 
     useEffect(() => {
-
         //checks if browser supports webgl
         if (!window.WebGLRenderingContext) {
             // the browser doesn't even know what WebGL is
@@ -88,7 +98,7 @@ export default function Home() {
 
     return (
         <main>
-            <div className="data-container block overflow-auto">
+            <div className="data-container z-50 overflow-auto flip2">
                 {/*TODO: ph, ppm, humidity, ec, alles laten passen*/}
                 <TempData/>
                 <TempData/>
@@ -101,7 +111,7 @@ export default function Home() {
                 <TempData/>
                 <button className="flip-button text-black text-xl" onClick={switchContainer}>&#8634;</button>
             </div>
-            <div className="history-container hidden text-black overflow-auto">
+            <div className="history-container z-[49] overflow-auto rotateY-180 flip">
                 <TempChart/>
                 <TempChart/>
                 <TempChart/>

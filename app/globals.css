@@ -87,7 +87,6 @@ body {
 
 .data-container {
     @apply
-    z-50
     w-[300px]
     h-[300px]
     bg-white
@@ -131,7 +130,7 @@ body {
 .temp-value {
     @apply
     w-[6px]
-    h-[60px]
+    h-[58px]
         /*mb-1*/
     origin-bottom
     absolute
@@ -168,8 +167,8 @@ body {
 
 .temp-circle {
     @apply
-    w-[15px]
-    h-[15px]
+    w-[13px]
+    h-[13px]
     rounded-full
     bg-gray-50
     border-2
@@ -180,7 +179,6 @@ body {
 
 .history-container {
     @apply
-    z-50
     w-[300px]
     h-[300px]
     bg-white
@@ -202,9 +200,12 @@ body {
     top-4;
 }
 
-.flip{
-    animation-name: flip;
-    animation-duration: 1s;
+.flip {
+    animation: linear flip 1s;
+}
+
+.flip2 {
+    animation: linear flip2 1s;
 }
 
 @keyframes flip {
@@ -214,4 +215,17 @@ body {
     to {
         transform: rotateY(180deg);
     }
+}
+
+@keyframes flip2 {
+    from {
+        transform: rotateY(180deg);
+    }
+    to {
+        transform: rotateY(0deg);
+    }
+}
+
+.rotateY-180 {
+    transform: rotateY(180deg);
 }
