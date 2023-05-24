@@ -75,6 +75,7 @@ export default function Home() {
     return (
         <main>
             <div className="data-container">
+                {/*TODO: ph, ppm, humidity, ec, alles laten passen*/}
                 <div className="temp-container">
                     <div className="outer-circle">
                         <div className="temp-value" style={{ transform: `rotate(${tempDeg()}deg)`}}>
