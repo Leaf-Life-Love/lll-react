@@ -14,19 +14,26 @@ import './globals.css'
 export default function Home() {
     const auth = getAuth();
     const provider = new OAuthProvider('microsoft.com');
-    const [tempValue, setTempValue] = useState(30);
+    const [EnvTemp, setEnvTemp] = useState(30);
+    const [WaterTemp, setWaterTemp] = useState(30);
+    const [Humidity, setHumidity] = useState(30);
+    const [UVLight, setUVLight] = useState(30);
+    const [CO2, setCO2] = useState(30);
+    const [EC, setEC] = useState(30);
+    const [PH, setPH] = useState(30);
+    const [ORP, setORP] = useState(30);
 
     const tempDeg = () =>{
         const minTemp = 0;
         const maxTemp = 30;
         const minDeg = -90;
         const maxDeg = 90;
-        const Deg = (tempValue - minTemp) * (maxDeg - minDeg) / (maxTemp - minTemp) + minDeg;
+        const Deg = (EnvTemp - minTemp) * (maxDeg - minDeg) / (maxTemp - minTemp) + minDeg;
 
-        if (Deg > maxDeg || tempValue > maxTemp) {
+        if (Deg > maxDeg || EnvTemp > maxTemp) {
             return maxDeg;
         }
-        if (Deg < minDeg || tempValue < minTemp) {
+        if (Deg < minDeg || EnvTemp < minTemp) {
             return minDeg;
         }
         return Deg;
@@ -81,7 +88,7 @@ export default function Home() {
                         <div className="temp-value" style={{ transform: `rotate(${tempDeg()}deg)`}}>
                             <div className="temp-circle"></div>
                         </div>
-                        <div className="inner-circle">{tempValue}&#8451;</div>
+                        <div className="inner-circle">{EnvTemp}&#8451;</div>
                     </div>
                     <div className="bottom-border"></div>
                 </div>
