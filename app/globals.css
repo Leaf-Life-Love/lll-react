@@ -96,15 +96,21 @@ body {
     border-black
     absolute
     left-5
-    top-5;
+    top-5
+    flex
+    flex-row
+    flex-wrap
+    justify-around;
 }
 
 .temp-container {
     @apply
-    w-[200px]
+    w-[120px]
     items-end
     flex
     justify-center
+    self-start
+    flex-initial;
 }
 
 .outer-circle {
@@ -112,8 +118,8 @@ body {
     rounded-tr-full
     rounded-tl-full
     bg-gradient-to-r from-blue-400 via-purple-500 to-red-500
-    w-[200px]
-    h-[100px]
+    w-[120px]
+    h-[60px]
     flex
     items-end
     justify-center
@@ -124,9 +130,9 @@ body {
 
 .temp-value {
     @apply
-    w-[10px]
-    h-[100px]
-    /*mb-1*/
+    w-[6px]
+    h-[60px]
+        /*mb-1*/
     origin-bottom
     absolute
     flex
@@ -137,8 +143,8 @@ body {
 
 .inner-circle {
     @apply
-    w-[150px]
-    h-[75px]
+    w-[90px]
+    h-[45px]
     rounded-tr-full
     rounded-tl-full
     bg-white
@@ -154,20 +160,58 @@ body {
 
 .bottom-border {
     @apply
-    w-[200px]
-    h-[20px]
+    w-[120px]
+    h-[12px]
     bg-white
     absolute
 }
 
 .temp-circle {
     @apply
-    w-[25px]
-    h-[25px]
+    w-[15px]
+    h-[15px]
     rounded-full
     bg-gray-50
     border-2
     border-gray-400
     origin-right
     absolute;
+}
+
+.history-container {
+    @apply
+    z-50
+    w-[300px]
+    h-[300px]
+    bg-white
+    rounded-lg
+    border-2
+    border-black
+    absolute
+    left-5
+    top-5
+    flex-col;
+}
+
+.flip-button {
+    @apply
+    w-auto
+    h-auto
+    fixed
+    left-6
+    top-4;
+}
+
+.flip{
+    animation-name: flip;
+    animation-duration: 1s;
+}
+
+@keyframes flip {
+    from {
+        transform: rotateY(0deg);
+    }
+    to {
+        transform: rotateY(180deg);
+    }
 }

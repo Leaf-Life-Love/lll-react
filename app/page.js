@@ -1,36 +1,31 @@
 'use client'
 import React, {Suspense, useEffect, useState} from "react";
 import {getAuth, signInWithPopup, OAuthProvider, getRedirectResult} from "firebase/auth";
-import {Html, Text, Loader} from "@react-three/drei";
+import {Text, Loader} from "@react-three/drei";
 import {Canvas} from '@react-three/fiber'
 import Floor from 'src/components/floor'
 import LightBulb from "src/components/lightbulb";
 import Controls from "src/components/controls";
 import Tower from "src/components/tower";
 import LoadingScreen from "src/components/loadingscreen";
+import TempChart from "src/components/tempChart";
+import TempData from "src/components/tempData";
 import './globals.css'
 
 
 export default function Home() {
     const auth = getAuth();
     const provider = new OAuthProvider('microsoft.com');
-    const [tempValue, setTempValue] = useState(30);
 
-    const tempDeg = () =>{
-        const minTemp = 0;
-        const maxTemp = 30;
-        const minDeg = -90;
-        const maxDeg = 90;
-        const Deg = (tempValue - minTemp) * (maxDeg - minDeg) / (maxTemp - minTemp) + minDeg;
+    const [EnvTemp, setEnvTemp] = useState(30);
+    const [WaterTemp, setWaterTemp] = useState(30);
+    const [Humidity, setHumidity] = useState(30);
+    const [UVLight, setUVLight] = useState(30);
+    const [CO2, setCO2] = useState(30);
+    const [EC, setEC] = useState(30);
+    const [PH, setPH] = useState(30);
+    const [ORP, setORP] = useState(30);
 
-        if (Deg > maxDeg || tempValue > maxTemp) {
-            return maxDeg;
-        }
-        if (Deg < minDeg || tempValue < minTemp) {
-            return minDeg;
-        }
-        return Deg;
-    }
 
     provider.setCustomParameters({
         prompt: 'consent',
@@ -55,8 +50,27 @@ export default function Home() {
         signInWithPopup(auth, provider)
     }
 
+    const switchContainer = () => {
+        const dataContainer = document.querySelector('.data-container')
+        const historyContainer = document.querySelector('.history-container')
+
+        // if (dataContainer.classList.contains('hidden') && historyContainer.classList.contains('block')) {
+            historyContainer.classList.toggle('flip')
+            dataContainer.classList.toggle('hidden')
+            dataContainer.classList.toggle('block')
+            dataContainer.classList.toggle('flex')
+
+        // }
+
+        // if (historyContainer.classList.contains('hidden') && dataContainer.classList.contains('block')) {
+            dataContainer.classList.toggle('flip')
+            historyContainer.classList.toggle('hidden')
+            historyContainer.classList.toggle('block')
+            historyContainer.classList.toggle('flex')
+        // }
+    }
+
     useEffect(() => {
-        setTempValue(10)
 
         //checks if browser supports webgl
         if (!window.WebGLRenderingContext) {
@@ -74,17 +88,30 @@ export default function Home() {
 
     return (
         <main>
-            <div className="data-container">
+            <div className="data-container block overflow-auto">
                 {/*TODO: ph, ppm, humidity, ec, alles laten passen*/}
-                <div className="temp-container">
-                    <div className="outer-circle">
-                        <div className="temp-value" style={{ transform: `rotate(${tempDeg()}deg)`}}>
-                            <div className="temp-circle"></div>
-                        </div>
-                        <div className="inner-circle">{tempValue}&#8451;</div>
-                    </div>
-                    <div className="bottom-border"></div>
-                </div>
+                <TempData/>
+                <TempData/>
+                <TempData/>
+                <TempData/>
+                <TempData/>
+                <TempData/>
+                <TempData/>
+                <TempData/>
+                <TempData/>
+                <button className="flip-button text-black text-xl" onClick={switchContainer}>&#8634;</button>
+            </div>
+            <div className="history-container hidden text-black overflow-auto">
+                <TempChart/>
+                <TempChart/>
+                <TempChart/>
+                <TempChart/>
+                <TempChart/>
+                <TempChart/>
+                <TempChart/>
+                <TempChart/>
+                <TempChart/>
+                <button className="flip-button text-black text-xl" onClick={switchContainer}>&#8634;</button>
             </div>
             <div id="canvas-container" className="scene">
                 <Canvas
