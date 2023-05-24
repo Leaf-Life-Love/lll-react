@@ -17,6 +17,15 @@ export default function Home() {
     const auth = getAuth();
     const provider = new OAuthProvider('microsoft.com');
 
+    const [EnvTemp, setEnvTemp] = useState(30);
+    const [WaterTemp, setWaterTemp] = useState(30);
+    const [Humidity, setHumidity] = useState(30);
+    const [UVLight, setUVLight] = useState(30);
+    const [CO2, setCO2] = useState(30);
+    const [EC, setEC] = useState(30);
+    const [PH, setPH] = useState(30);
+    const [ORP, setORP] = useState(30);
+
 
     provider.setCustomParameters({
         prompt: 'consent',
