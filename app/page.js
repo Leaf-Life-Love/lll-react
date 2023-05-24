@@ -12,7 +12,6 @@ import TempChart from "src/components/tempChart";
 import TempData from "src/components/tempData";
 import './globals.css'
 
-
 export default function Home() {
     const auth = getAuth();
     const provider = new OAuthProvider('microsoft.com');
