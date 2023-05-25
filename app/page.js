@@ -12,7 +12,6 @@ import TempChart from "src/components/tempChart";
 import TempData from "src/components/tempData";
 import './globals.css'
 
-
 export default function Home() {
     const auth = getAuth();
     const provider = new OAuthProvider('microsoft.com');
@@ -54,24 +53,30 @@ export default function Home() {
         const dataContainer = document.querySelector('.data-container')
         const historyContainer = document.querySelector('.history-container')
 
-        // if (dataContainer.classList.contains('hidden') && historyContainer.classList.contains('block')) {
-            historyContainer.classList.toggle('flip')
+        dataContainer.classList.toggle('flip')
+        dataContainer.classList.toggle('flip2')
+        historyContainer.classList.toggle('flip')
+        historyContainer.classList.toggle('flip2')
+
+        setTimeout(() => {
             dataContainer.classList.toggle('hidden')
-            dataContainer.classList.toggle('block')
-            dataContainer.classList.toggle('flex')
-
-        // }
-
-        // if (historyContainer.classList.contains('hidden') && dataContainer.classList.contains('block')) {
-            dataContainer.classList.toggle('flip')
             historyContainer.classList.toggle('hidden')
-            historyContainer.classList.toggle('block')
+        }, 500);
+
+        dataContainer.addEventListener("animationend", function() {
+            dataContainer.classList.toggle('z-[100]')
+            dataContainer.classList.toggle('z-[200]')
+            dataContainer.classList.toggle('flex')
+        });
+
+        historyContainer.addEventListener("animationend", function() {
+            historyContainer.classList.toggle('z-[100]')
+            historyContainer.classList.toggle('z-[200]')
             historyContainer.classList.toggle('flex')
-        // }
+        });
     }
 
     useEffect(() => {
-
         //checks if browser supports webgl
         if (!window.WebGLRenderingContext) {
             // the browser doesn't even know what WebGL is
@@ -88,7 +93,7 @@ export default function Home() {
 
     return (
         <main>
-            <div className="data-container block overflow-auto">
+            <div className="data-container z-[200] flex overflow-auto flip2">
                 {/*TODO: ph, ppm, humidity, ec, alles laten passen*/}
                 <TempData/>
                 <TempData/>
@@ -99,9 +104,9 @@ export default function Home() {
                 <TempData/>
                 <TempData/>
                 <TempData/>
-                <button className="flip-button text-black text-xl" onClick={switchContainer}>&#8634;</button>
+                <button className="flip-button" onClick={switchContainer}>&#8634;</button>
             </div>
-            <div className="history-container hidden text-black overflow-auto">
+            <div className="history-container hidden z-[100] flip">
                 <TempChart/>
                 <TempChart/>
                 <TempChart/>
@@ -111,7 +116,7 @@ export default function Home() {
                 <TempChart/>
                 <TempChart/>
                 <TempChart/>
-                <button className="flip-button text-black text-xl" onClick={switchContainer}>&#8634;</button>
+                <button className="flip-button" onClick={switchContainer}>&#8634;</button>
             </div>
             <div id="canvas-container" className="scene">
                 <Canvas
@@ -121,8 +126,8 @@ export default function Home() {
                 >
                     <Suspense fallback={<LoadingScreen/>}>
                         <Text position={[8.7, -4, 10.01]} onClick={handelLoginButton}>Login</Text>
-                        <gridHelper args={[20, 20]}/>
-                        <axesHelper args={[50]}/>
+                        {/*<gridHelper args={[20, 20]}/>*/}
+                        {/*<axesHelper args={[50]}/>*/}
                         <Controls/>
                         <ambientLight intensity={0.2} color={"white"}/>
                         <LightBulb position={[10, 15, 10]}/>
