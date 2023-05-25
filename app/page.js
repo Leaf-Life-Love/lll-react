@@ -55,29 +55,25 @@ export default function Home() {
 
         dataContainer.classList.toggle('flip')
         dataContainer.classList.toggle('flip2')
-        // dataContainer.classList.toggle('hidden')
-        // dataContainer.classList.toggle('block')
-        dataContainer.classList.toggle('flex')
-        // dataContainer.classList.toggle('z-[49]')
-        dataContainer.classList.toggle('z-50')
-        dataContainer.classList.toggle('rotateY-180')
-
         historyContainer.classList.toggle('flip')
         historyContainer.classList.toggle('flip2')
-        // historyContainer.classList.toggle('hidden')
-        // historyContainer.classList.toggle('block')
-        historyContainer.classList.toggle('flex')
-        // historyContainer.classList.toggle('z-[49]')
-        historyContainer.classList.toggle('z-50')
-        historyContainer.classList.toggle('rotateY-180')
 
-        // dataContainer.addEventListener("animationend", function() {
-        //     dataContainer.classList.toggle('z-50')
-        // });
-        //
-        // historyContainer.addEventListener("animationend", function() {
-        //     historyContainer.classList.toggle('z-50')
-        // });
+        setTimeout(() => {
+            dataContainer.classList.toggle('hidden')
+            historyContainer.classList.toggle('hidden')
+        }, 500);
+
+        dataContainer.addEventListener("animationend", function() {
+            dataContainer.classList.toggle('z-[100]')
+            dataContainer.classList.toggle('z-[200]')
+            dataContainer.classList.toggle('flex')
+        });
+
+        historyContainer.addEventListener("animationend", function() {
+            historyContainer.classList.toggle('z-[100]')
+            historyContainer.classList.toggle('z-[200]')
+            historyContainer.classList.toggle('flex')
+        });
     }
 
     useEffect(() => {
@@ -97,7 +93,7 @@ export default function Home() {
 
     return (
         <main>
-            <div className="data-container z-50 overflow-auto flip2">
+            <div className="data-container z-[200] flex overflow-auto flip2">
                 {/*TODO: ph, ppm, humidity, ec, alles laten passen*/}
                 <TempData/>
                 <TempData/>
@@ -108,9 +104,9 @@ export default function Home() {
                 <TempData/>
                 <TempData/>
                 <TempData/>
-                <button className="flip-button text-black text-xl" onClick={switchContainer}>&#8634;</button>
+                <button className="flip-button" onClick={switchContainer}>&#8634;</button>
             </div>
-            <div className="history-container z-[49] overflow-auto rotateY-180 flip">
+            <div className="history-container hidden z-[100] flip">
                 <TempChart/>
                 <TempChart/>
                 <TempChart/>
@@ -120,7 +116,7 @@ export default function Home() {
                 <TempChart/>
                 <TempChart/>
                 <TempChart/>
-                <button className="flip-button text-black text-xl" onClick={switchContainer}>&#8634;</button>
+                <button className="flip-button" onClick={switchContainer}>&#8634;</button>
             </div>
             <div id="canvas-container" className="scene">
                 <Canvas
@@ -130,8 +126,8 @@ export default function Home() {
                 >
                     <Suspense fallback={<LoadingScreen/>}>
                         <Text position={[8.7, -4, 10.01]} onClick={handelLoginButton}>Login</Text>
-                        <gridHelper args={[20, 20]}/>
-                        <axesHelper args={[50]}/>
+                        {/*<gridHelper args={[20, 20]}/>*/}
+                        {/*<axesHelper args={[50]}/>*/}
                         <Controls/>
                         <ambientLight intensity={0.2} color={"white"}/>
                         <LightBulb position={[10, 15, 10]}/>
