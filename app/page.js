@@ -1,8 +1,13 @@
 'use client'
 import React, {Suspense, useEffect, useState} from "react";
-import {getAuth, signInWithPopup, OAuthProvider, getRedirectResult} from "firebase/auth";
+import {getAuth, signInWithPopup, OAuthProvider, getRedirectResult,} from "firebase/auth";
 import {Text, Loader} from "@react-three/drei";
 import {Canvas} from '@react-three/fiber'
+import JsonFind from 'json-find'
+import {db} from "@/src/firebase/config";
+import {collection, query, doc, getDoc, getDocs, where} from "firebase/firestore";
+
+
 import Floor from 'src/components/floor'
 import LightBulb from "src/components/lightbulb";
 import Controls from "src/components/controls";
@@ -15,6 +20,8 @@ import './globals.css'
 export default function Home() {
     const auth = getAuth();
     const provider = new OAuthProvider('microsoft.com');
+    let isAdmin = false;
+    let fullRights = false;
 
     const [EnvTemp, setEnvTemp] = useState(30);
     const [WaterTemp, setWaterTemp] = useState(30);
@@ -24,7 +31,6 @@ export default function Home() {
     const [EC, setEC] = useState(30);
     const [PH, setPH] = useState(30);
     const [ORP, setORP] = useState(30);
-
 
     provider.setCustomParameters({
         prompt: 'consent',
@@ -45,6 +51,18 @@ export default function Home() {
             console.log(error)
         });
 
+    const checkAdmin = async () => {
+        const user = auth.currentUser;
+        const getAdmin = await getDocs(query(collection(db, 'Admins'), where('Email', '==', user.email)))
+        if (!getAdmin.empty) {
+            isAdmin = true
+        }
+        if (getAdmin.docs[0].data().AllRights) {
+            fullRights = true
+            console.log('full rights')
+        }
+    }
+
     const handelLoginButton = () => {
         signInWithPopup(auth, provider)
     }
@@ -63,13 +81,13 @@ export default function Home() {
             historyContainer.classList.toggle('hidden')
         }, 500);
 
-        dataContainer.addEventListener("animationend", function() {
+        dataContainer.addEventListener("animationend", function () {
             dataContainer.classList.toggle('z-[100]')
             dataContainer.classList.toggle('z-[200]')
             dataContainer.classList.toggle('flex')
         });
 
-        historyContainer.addEventListener("animationend", function() {
+        historyContainer.addEventListener("animationend", function () {
             historyContainer.classList.toggle('z-[100]')
             historyContainer.classList.toggle('z-[200]')
             historyContainer.classList.toggle('flex')
@@ -77,6 +95,7 @@ export default function Home() {
     }
 
     useEffect(() => {
+        checkAdmin()
         //checks if browser supports webgl
         if (!window.WebGLRenderingContext) {
             // the browser doesn't even know what WebGL is
@@ -89,6 +108,7 @@ export default function Home() {
                 alert("WebGL is supported, but disabled :-(. If you need help, go to: https://get.webgl.org/troubleshooting")
             }
         }
+
     }, [auth]);
 
     return (
