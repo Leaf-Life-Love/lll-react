@@ -13,9 +13,11 @@ import LightBulb from "src/components/lightbulb";
 import Controls from "src/components/controls";
 import Tower from "src/components/tower";
 import LoadingScreen from "src/components/loadingscreen";
-import TempChart from "src/components/tempChart";
-import TempData from "src/components/tempData";
+import DataChart from "@/src/components/charts/dataChart";
 import './globals.css'
+import SensorData from "@/src/components/data/sensorData";
+import {collection, limit, onSnapshot, orderBy, query} from "firebase/firestore";
+import {db} from "@/src/firebase/config";
 
 export default function Home() {
     const auth = getAuth();
@@ -23,14 +25,7 @@ export default function Home() {
     let isAdmin = false;
     let fullRights = false;
 
-    const [EnvTemp, setEnvTemp] = useState(30);
-    const [WaterTemp, setWaterTemp] = useState(30);
-    const [Humidity, setHumidity] = useState(30);
-    const [UVLight, setUVLight] = useState(30);
-    const [CO2, setCO2] = useState(30);
-    const [EC, setEC] = useState(30);
-    const [PH, setPH] = useState(30);
-    const [ORP, setORP] = useState(30);
+    const [dataValues, setDataValues] = useState([]);
 
     provider.setCustomParameters({
         prompt: 'consent',
@@ -94,34 +89,31 @@ export default function Home() {
                 alert("WebGL is supported, but disabled :-(. If you need help, go to: https://get.webgl.org/troubleshooting")
             }
         }
+const getData = () => {
+            const unsub = onSnapshot(query(collection(db, "Sensors"), orderBy("date", "desc"), limit(1)), (doc) => {
+                doc.forEach((key) => {
+                    setDataValues(key.data("data").data);
+                })
+            });
 
+            return () => {
+                unsub();
+            };
+
+        };
+        getData();
     }, [auth]);
-
+console.log(dataValues)
     return (
         <main>
             <div className="data-container z-[200] flex overflow-auto flip2">
-                {/*TODO: ph, ppm, humidity, ec, alles laten passen*/}
-                <TempData/>
-                <TempData/>
-                <TempData/>
-                <TempData/>
-                <TempData/>
-                <TempData/>
-                <TempData/>
-                <TempData/>
-                <TempData/>
+                {Object.keys(dataValues).map((k) => {
+                    return <SensorData key={k} data={dataValues[k]}/>
+                })}
                 <button className="flip-button" onClick={switchContainer}>&#8634;</button>
             </div>
             <div className="history-container hidden z-[100] flip">
-                <TempChart/>
-                <TempChart/>
-                <TempChart/>
-                <TempChart/>
-                <TempChart/>
-                <TempChart/>
-                <TempChart/>
-                <TempChart/>
-                <TempChart/>
+                <DataChart/>
                 <button className="flip-button" onClick={switchContainer}>&#8634;</button>
             </div>
             <div id="canvas-container" className="scene">
