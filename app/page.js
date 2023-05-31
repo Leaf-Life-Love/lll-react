@@ -5,8 +5,7 @@ import {Text, Loader} from "@react-three/drei";
 import {Canvas} from '@react-three/fiber'
 import JsonFind from 'json-find'
 import {db} from "@/src/firebase/config";
-import {collection, query, doc, getDoc, getDocs, where} from "firebase/firestore";
-
+import {collection, query, doc, getDoc, getDocs, where, limit, onSnapshot, orderBy} from "firebase/firestore";
 
 import Floor from 'src/components/floor'
 import LightBulb from "src/components/lightbulb";
@@ -16,8 +15,6 @@ import LoadingScreen from "src/components/loadingscreen";
 import DataChart from "@/src/components/charts/dataChart";
 import './globals.css'
 import SensorData from "@/src/components/data/sensorData";
-import {collection, limit, onSnapshot, orderBy, query} from "firebase/firestore";
-import {db} from "@/src/firebase/config";
 
 export default function Home() {
     const auth = getAuth();
@@ -89,21 +86,19 @@ export default function Home() {
                 alert("WebGL is supported, but disabled :-(. If you need help, go to: https://get.webgl.org/troubleshooting")
             }
         }
-const getData = () => {
+        const getData = () => {
             const unsub = onSnapshot(query(collection(db, "Sensors"), orderBy("date", "desc"), limit(1)), (doc) => {
                 doc.forEach((key) => {
                     setDataValues(key.data("data").data);
                 })
             });
-
             return () => {
                 unsub();
             };
-
         };
         getData();
     }, [auth]);
-console.log(dataValues)
+    // console.log(dataValues)
     return (
         <main>
             <div className="data-container z-[200] flex overflow-auto flip2">
