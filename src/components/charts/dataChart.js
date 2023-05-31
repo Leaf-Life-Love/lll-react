@@ -2,7 +2,7 @@ import React from "react";
 import Chart from "chart.js/auto";
 import {Line} from "react-chartjs-2";
 
-function TempChart() {
+function DataChart() {
     return (
         <Line
             data={
@@ -37,4 +37,4 @@ function TempChart() {
     )
 }
 
-export default TempChart;
+export default DataChart;
