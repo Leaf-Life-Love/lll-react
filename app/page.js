@@ -38,19 +38,6 @@ export default function Home() {
     });
     provider.addScope('User.Read');
 
-    getRedirectResult(auth)
-        .then((result) => {
-            // User is signed in.
-            // IdP data available in result.additionalUserInfo.profile.
-            // Get the OAuth access token and ID Token
-            const credential = OAuthProvider.credentialFromResult(result);
-            const accessToken = credential.accessToken;
-            const idToken = credential.idToken;
-        })
-        .catch((error) => {
-            console.log(error)
-        });
-
     const checkAdmin = async () => {
         const user = auth.currentUser;
         const getAdmin = await getDocs(query(collection(db, 'Admins'), where('Email', '==', user.email)))
@@ -59,7 +46,6 @@ export default function Home() {
         }
         if (getAdmin.docs[0].data().AllRights) {
             fullRights = true
-            console.log('full rights')
         }
     }
 

@@ -249,3 +249,14 @@ body {
 .z-49 {
     z-index: 49;
 }
+
+.dashboard-items{
+    @apply
+    flex
+    flex-row
+    flex-wrap
+    justify-around
+    w-full
+    h-full
+    overflow-auto;
+}
