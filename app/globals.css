@@ -87,7 +87,6 @@ body {
 
 .data-container {
     @apply
-    z-50
     w-[300px]
     h-[300px]
     bg-white
@@ -97,10 +96,11 @@ body {
     absolute
     left-5
     top-5
-    flex
     flex-row
     flex-wrap
-    justify-around;
+    justify-around
+    pt-3
+    overflow-auto;
 }
 
 .temp-container {
@@ -131,7 +131,7 @@ body {
 .temp-value {
     @apply
     w-[6px]
-    h-[60px]
+    h-[58px]
         /*mb-1*/
     origin-bottom
     absolute
@@ -168,8 +168,8 @@ body {
 
 .temp-circle {
     @apply
-    w-[15px]
-    h-[15px]
+    w-[13px]
+    h-[13px]
     rounded-full
     bg-gray-50
     border-2
@@ -180,7 +180,6 @@ body {
 
 .history-container {
     @apply
-    z-50
     w-[300px]
     h-[300px]
     bg-white
@@ -190,28 +189,63 @@ body {
     absolute
     left-5
     top-5
-    flex-col;
+    flex-col
+    overflow-auto;
 }
 
 .flip-button {
     @apply
+    text-black
+    text-xl
     w-auto
     h-auto
-    fixed
-    left-6
-    top-4;
+    absolute
+    left-2
+    top-[-2px];
 }
 
-.flip{
-    animation-name: flip;
-    animation-duration: 1s;
+.flip {
+    animation:  flip 1s;
+}
+
+.flip2 {
+    animation:  flip2 1s;
 }
 
 @keyframes flip {
-    from {
+    0% {
         transform: rotateY(0deg);
     }
-    to {
-        transform: rotateY(180deg);
+    50% {
+        @apply
+        z-[100]
+        hidden;
     }
+    100% {
+        transform: rotateY(100deg);
+        @apply
+        hidden;
+    }
+}
+
+@keyframes flip2 {
+    0% {
+        transform: rotateY(100deg);
+    }
+    50% {
+        @apply
+        z-[200]
+        flex;
+    }
+    100% {
+        transform: rotateY(0deg);
+    }
+}
+
+.rotateY-180 {
+    transform: rotateY(180deg);
+}
+
+.z-49 {
+    z-index: 49;
 }
