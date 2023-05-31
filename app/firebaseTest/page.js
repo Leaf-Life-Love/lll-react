@@ -26,7 +26,6 @@ function Page(props) {
     }
 
     useEffect(() => {
-
         onSnapshot(query(collection(db, 'plants')), (querySnapshot) => {
             let temp = [];
 
