@@ -22,7 +22,13 @@ export default function Home() {
     let isAdmin = false;
     let fullRights = false;
 
+    const [sensorInfo, setSensorInfo] = useState([]);
+
     const [dataValues, setDataValues] = useState([]);
+    const [dataKeys, setDataKeys] = useState([]);
+    const [minValue, setMinValue] = useState([]);
+    const [maxValue, setMaxValue] = useState([]);
+    const [sensorSymbol, setSensorSymbol] = useState([]);
 
     provider.setCustomParameters({
         prompt: 'consent',
@@ -72,6 +78,29 @@ export default function Home() {
         });
     }
 
+    const getData = () => {
+        const unsub = onSnapshot(query(collection(db, "Sensors"), orderBy("date", "desc"), limit(1)), (doc) => {
+            doc.forEach((doc) => {
+                setDataValues(doc.data("data").data);
+                setDataKeys(Object.keys(doc.data().data));
+            })
+        });
+        return () => {
+            unsub();
+        };
+    };
+    const getSensorInfo = async () => {
+        const SensorInfo = await getDocs(query(collection(db, 'SensorInfo')))
+
+        let si = [];
+
+        SensorInfo.docs.map((doc) => {
+            si.push(doc.data());
+        });
+
+        setSensorInfo(si);
+    }
+
     useEffect(() => {
         checkAdmin()
         //checks if browser supports webgl
@@ -86,24 +115,19 @@ export default function Home() {
                 alert("WebGL is supported, but disabled :-(. If you need help, go to: https://get.webgl.org/troubleshooting")
             }
         }
-        const getData = () => {
-            const unsub = onSnapshot(query(collection(db, "Sensors"), orderBy("date", "desc"), limit(1)), (doc) => {
-                doc.forEach((key) => {
-                    setDataValues(key.data("data").data);
-                })
-            });
-            return () => {
-                unsub();
-            };
-        };
-        getData();
+        getData()
+        getSensorInfo()
     }, [auth]);
     // console.log(dataValues)
     return (
         <main>
             <div className="data-container z-[200] flex overflow-auto flip2">
-                {Object.keys(dataValues).map((k) => {
-                    return <SensorData key={k} data={dataValues[k]}/>
+                {sensorInfo.map((v, i) => {
+                    // dataValues[v.name]
+                    // v.min
+                    // v.max
+                    // v.name
+                    return <SensorData key={i} data={dataValues[v.name]} dataNames={v.name} min={v.min} max={v.max} symbol={v.symbol}/>
                 })}
                 <button className="flip-button" onClick={switchContainer}>&#8634;</button>
             </div>

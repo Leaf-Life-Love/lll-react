@@ -1,15 +1,17 @@
 import React, {useState, useEffect} from "react";
-import {collection, doc, onSnapshot, query, Timestamp, orderBy, limit} from "firebase/firestore";
+import {collection, doc, onSnapshot, query, Timestamp, orderBy, limit, getDocs, where} from "firebase/firestore";
 import {db} from "@/src/firebase/config";
 
-function SensorData({data}) {
+function SensorData({data, dataNames, min, max, symbol}) {
     const [dataValues, setDataValues] = useState(data);
-    const [minValue, setMinValue] = useState(0);
-    const [maxValue, setMaxValue] = useState(30);
+    const [dataKeys, setDataKeys] = useState(dataNames);
+    const [minValue, setMinValue] = useState(min);
+    const [maxValue, setMaxValue] = useState(max);
+    const [sensorSymbol, setSensorSymbol] = useState(symbol);
 
     const dataDeg = (currentValue, minValue, maxValue) =>{
-        const minDeg = -90;
-        const maxDeg = 90;
+        const minDeg = -82;
+        const maxDeg = 82;
         const Deg = (currentValue - minValue) * (maxDeg - minDeg) / (maxValue - minValue) + minDeg;
 
         if (Deg > maxDeg || currentValue > maxValue) {
@@ -21,14 +23,18 @@ function SensorData({data}) {
         return Deg;
     }
 
-    return (
+    useEffect(() => {
+        // getSensorInfo()
+    });
 
+    return (
         <div className="temp-container">
-            <div className="outer-circle">
+            <div className="text-black absolute">{dataKeys}</div>
+            <div className="outer-circle" style={{backgroundImage: "linear-gradient(to right, rgb(96, 165, 250), rgb(168, 85, 247), rgb(239, 68, 68)"}}>
                 <div className="temp-value" style={{ transform: `rotate(${dataDeg(dataValues, minValue, maxValue)}deg)`}}>
                     <div className="temp-circle"></div>
                 </div>
-                <div className="inner-circle">{dataValues}&#8451;</div>
+                <div className="inner-circle">{dataValues + " " + sensorSymbol}</div>
             </div>
         </div>
 

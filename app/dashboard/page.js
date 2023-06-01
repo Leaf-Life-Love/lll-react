@@ -253,7 +253,7 @@ export default function Page() {
                 {showPlantForm()}
                 {showAdminForm()}
             </div>
-            <a className="px-4 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-700 absolute bottom-5 left-4" href={"/"}>Go Back</a>
+            <a className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-400 absolute bottom-5 left-4" href={"/"}>Go Back</a>
         </div>
     )
 }

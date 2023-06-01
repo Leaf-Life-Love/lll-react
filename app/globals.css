@@ -106,7 +106,7 @@ body {
 .temp-container {
     @apply
     w-[120px]
-    items-end
+    items-start
     flex
     justify-center
     self-start
@@ -117,13 +117,14 @@ body {
     @apply
     rounded-tr-full
     rounded-tl-full
-    bg-gradient-to-r from-blue-400 via-purple-500 to-red-500
+    /*bg-gradient-to-r from-blue-400 via-purple-500 to-red-500*/
     w-[120px]
     h-[60px]
     flex
     items-end
     justify-center
-    mb-5
+    mt-6
+    mb-1
     border-black
     border
 }
@@ -290,12 +291,12 @@ body {
     border-gray-300
     focus:outline-none
     focus:ring-2
-    focus:ring-blue-500
-    focus:border-blue-500
+    focus:ring-green-500
+    focus:border-green-500
     text-center;
 }
 
-.form-input-container{
+.form-input-container {
     @apply
     container
     mx-auto
@@ -309,7 +310,8 @@ input::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
+
 /*The same as above but for firefox*/
-input[type=number]{
+input[type=number] {
     -moz-appearance: textfield;
 }
