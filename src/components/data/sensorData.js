@@ -23,10 +23,6 @@ function SensorData({data, dataNames, min, max, symbol}) {
         return Deg;
     }
 
-    useEffect(() => {
-        // getSensorInfo()
-    });
-
     return (
         <div className="temp-container">
             <div className="text-black absolute">{dataKeys}</div>

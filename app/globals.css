@@ -34,7 +34,7 @@ body {
 
 .canvas {
     @apply
-    bg-sky-300
+    bg-gray-100
     fixed;
 }
 

@@ -7,10 +7,10 @@ import JsonFind from 'json-find'
 import {db} from "@/src/firebase/config";
 import {collection, query, doc, getDoc, getDocs, where, limit, onSnapshot, orderBy} from "firebase/firestore";
 
-import Floor from 'src/components/floor'
+import Floor from '@/src/components/Meshes/floor'
 import LightBulb from "src/components/lightbulb";
-import Controls from "src/components/controls";
-import Tower from "src/components/tower";
+import Controls from "@/src/components/controls/controls";
+import Tower from "@/src/components/Meshes/tower";
 import LoadingScreen from "src/components/loadingscreen";
 import DataChart from "@/src/components/charts/dataChart";
 import './globals.css'
@@ -123,10 +123,6 @@ export default function Home() {
         <main>
             <div className="data-container z-[200] flex overflow-auto flip2">
                 {sensorInfo.map((v, i) => {
-                    // dataValues[v.name]
-                    // v.min
-                    // v.max
-                    // v.name
                     return <SensorData key={i} data={dataValues[v.name]} dataNames={v.name} min={v.min} max={v.max} symbol={v.symbol}/>
                 })}
                 <button className="flip-button" onClick={switchContainer}>&#8634;</button>
