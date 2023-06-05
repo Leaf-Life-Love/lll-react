@@ -1,0 +1,115 @@
+[
+  {
+    "name": "pot-1",
+    "position": [0.001, 0.123, 0],
+    "rotation": [0, 240, 0],
+    "visible": true
+  },
+  {
+    "name": "pot-2",
+    "position": [0.001, 0.123, 0],
+    "rotation": [0, 120, 0],
+    "visible": true
+  },
+  {
+    "name": "pot-3",
+    "position": [0.001, 0.123, 0],
+    "rotation": [0, 0, 0],
+    "visible": true
+  },
+  {
+    "name": "pot-4",
+    "position": [0.001, 0.243, 0],
+    "rotation": [0, 180, 0],
+    "visible": true
+  },
+  {
+    "name": "pot-5",
+    "position": [0.001, 0.243, 0],
+    "rotation": [0, 300, 0],
+    "visible": true
+  },
+  {
+    "name": "pot-6",
+    "position": [0.001, 0.243, 0],
+    "rotation": [0, 60, 0],
+    "visible": true
+  },
+  {
+    "name": "pot-7",
+    "position": [0.001, 0.362, 0],
+    "rotation": [0, 120, 0],
+    "visible": true
+  },
+  {
+    "name": "pot-8",
+    "position": [0.001, 0.362, 0],
+    "rotation": [0, 240, 0],
+    "visible": true
+  },
+  {
+    "name": "pot-9",
+    "position": [0.001, 0.362, 0],
+    "rotation": [0, 0, 0],
+    "visible": true
+  },
+  {
+    "name": "pot-10",
+    "position": [0.001, 0.485, 0],
+    "rotation": [0, 180, 0],
+    "visible": true
+  },
+  {
+    "name": "pot-11",
+    "position": [0.001, 0.485, 0],
+    "rotation": [0, 300, 0],
+    "visible": true
+  },
+  {
+    "name": "pot-12",
+    "position": [0.001, 0.485, 0],
+    "rotation": [0, 60, 0],
+    "visible": true
+  },
+  {
+    "name": "pot-13",
+    "position": [0.001, 0.602, 0],
+    "rotation": [0, 120, 0],
+    "visible": true
+  },
+  {
+    "name": "pot-14",
+    "position": [0.001, 0.602, 0],
+    "rotation": [0, 240, 0],
+    "visible": true
+  },
+  {
+    "name": "pot-15",
+    "position": [0.001, 0.602, 0],
+    "rotation": [0, 0, 0],
+    "visible": true
+  },
+  {
+    "name": "pot-16",
+    "position": [0.001, 0.725, 0],
+    "rotation": [0, 180, 0
+    ],
+    "visible": true
+  },
+  {
+    "name": "pot-17",
+    "position": [0.001, 0.725, 0
+    ],
+    "rotation": [0, 300, 0
+    ],
+    "visible": true
+  },
+  {
+    "name": "pot-18",
+    "position": [0.001, 0.725, 0
+    ],
+    "rotation": [0, 60, 0
+    ],
+    "visible": true
+  }
+]
