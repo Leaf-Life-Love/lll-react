@@ -15,6 +15,7 @@ import LoadingScreen from "src/components/loadingscreen";
 import DataChart from "@/src/components/charts/dataChart";
 import './globals.css'
 import SensorData from "@/src/components/data/sensorData";
+import loadingscreen from "src/components/loadingscreen";
 
 export default function Home() {
     const auth = getAuth();
@@ -29,6 +30,7 @@ export default function Home() {
     const [minValue, setMinValue] = useState([]);
     const [maxValue, setMaxValue] = useState([]);
     const [sensorSymbol, setSensorSymbol] = useState([]);
+    let loadingScreen = null;
 
     provider.setCustomParameters({
         prompt: 'consent',
@@ -46,6 +48,10 @@ export default function Home() {
             fullRights = true
         }
     }
+
+    useEffect(() => {
+        loadingScreen = <LoadingScreen/>;
+    }, [])
 
     const handelLoginButton = () => {
         signInWithPopup(auth, provider)
@@ -102,7 +108,10 @@ export default function Home() {
     }
 
     useEffect(() => {
-        checkAdmin()
+        //if logged in, check if admin
+        if (auth.currentUser) {
+            checkAdmin()
+        }
         //checks if browser supports webgl
         if (!window.WebGLRenderingContext) {
             // the browser doesn't even know what WebGL is
@@ -134,13 +143,13 @@ export default function Home() {
             <div id="canvas-container" className="scene">
                 <Canvas
                     shadows={true}
-                    camera={{position: [15, 7, 0],}}
+                    camera={{position: [0, 7, -15],}}
                     className="canvas"
                 >
-                    <Suspense fallback={<LoadingScreen/>}>
+                    <Suspense fallback={loadingScreen}>
                         <Text position={[8.7, -4, 10.01]} onClick={handelLoginButton}>Login</Text>
-                        {/*<gridHelper args={[20, 20]}/>*/}
-                        {/*<axesHelper args={[50]}/>*/}
+                        <gridHelper args={[20, 20]}/>
+                        <axesHelper args={[50]}/>
                         <Controls/>
                         <ambientLight intensity={0.2} color={"white"}/>
                         <LightBulb position={[10, 15, 10]}/>
