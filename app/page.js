@@ -1,54 +1,60 @@
 'use client'
 import React, {Suspense, useEffect, useState} from "react";
-import {getAuth, signInWithPopup, OAuthProvider, getRedirectResult} from "firebase/auth";
+import {getAuth, signInWithPopup, OAuthProvider, getRedirectResult,} from "firebase/auth";
 import {Text, Loader} from "@react-three/drei";
 import {Canvas} from '@react-three/fiber'
-import Floor from 'src/components/floor'
+import JsonFind from 'json-find'
+import {db} from "@/src/firebase/config";
+import {collection, query, doc, getDoc, getDocs, where, limit, onSnapshot, orderBy} from "firebase/firestore";
+
+import Floor from '@/src/components/Meshes/floor'
 import LightBulb from "src/components/lightbulb";
-import Controls from "src/components/controls";
-import Tower from "src/components/tower";
+import Controls from "@/src/components/controls/controls";
+import Tower from "@/src/components/Meshes/tower";
 import LoadingScreen from "src/components/loadingscreen";
 import SensorChart from "@/src/components/charts/sensorChart";
 import './globals.css'
 import SensorData from "@/src/components/data/sensorData";
-import {collection, limit, onSnapshot, orderBy, query} from "firebase/firestore";
-import {db} from "@/src/firebase/config";
+import loadingscreen from "src/components/loadingscreen";
 
 export default function Home() {
     const auth = getAuth();
     const provider = new OAuthProvider('microsoft.com');
+    let isAdmin = false;
+    let fullRights = false;
+
 
     const [latestValues, setLatestValues] = useState([]);
     const [historyValues, setHistoryValues] = useState([]);
+    const [sensorInfo, setSensorInfo] = useState([]);
+   const [dataValues, setDataValues] = useState([]);
+    const [dataKeys, setDataKeys] = useState([]);
+    const [minValue, setMinValue] = useState([]);
+    const [maxValue, setMaxValue] = useState([]);
+    const [sensorSymbol, setSensorSymbol] = useState([]);
+    let loadingScreen = null;
 
-    useEffect(() => {
-        const getData = () => {
-            const latest = onSnapshot(query(collection(db, "Sensors"), orderBy("date", "desc"), limit(1)), (doc) => {
-                doc.forEach((key) => {
-                    setLatestValues(key.data("data").data);
-                })
-            });
-
-            const history = onSnapshot(query(collection(db, "Sensors"), orderBy("date", "desc"), limit(10)), (doc) => {
-                doc.forEach((key) => {
-                    setHistoryValues(key.data("data").data);
-                })
-            });
-
-            return () => {
-                latest();
-                history();
-            };
-
-        };
-        getData();
-    }, []);
 
     provider.setCustomParameters({
         prompt: 'consent',
         tenant: 'e8e5eb49-74bd-45b9-905a-1193cb5a9913',
     });
     provider.addScope('User.Read');
+
+    const checkAdmin = async () => {
+        const user = auth.currentUser;
+        const getAdmin = await getDocs(query(collection(db, 'Admins'), where('Email', '==', user.email)))
+        if (!getAdmin.empty) {
+            isAdmin = true
+        }
+        if (getAdmin.docs[0].data().AllRights) {
+            fullRights = true
+        }
+    }
+
+    useEffect(() => {
+        loadingScreen = <LoadingScreen/>;
+    }, [])
 
     const handelLoginButton = () => {
         signInWithPopup(auth, provider)
@@ -68,20 +74,54 @@ export default function Home() {
             historyContainer.classList.toggle('hidden')
         }, 500);
 
-        dataContainer.addEventListener("animationend", function() {
+        dataContainer.addEventListener("animationend", function () {
             dataContainer.classList.toggle('z-[100]')
             dataContainer.classList.toggle('z-[200]')
             dataContainer.classList.toggle('flex')
         });
 
-        historyContainer.addEventListener("animationend", function() {
+        historyContainer.addEventListener("animationend", function () {
             historyContainer.classList.toggle('z-[100]')
             historyContainer.classList.toggle('z-[200]')
             historyContainer.classList.toggle('flex')
         });
     }
 
+    const getData = () => {
+        const unsub = onSnapshot(query(collection(db, "Sensors"), orderBy("date", "desc"), limit(1)), (doc) => {
+            doc.forEach((doc) => {
+                setDataValues(doc.data("data").data);
+                setDataKeys(Object.keys(doc.data().data));
+            })
+        });
+      
+        const history = onSnapshot(query(collection(db, "Sensors"), orderBy("date", "desc"), limit(10)), (doc) => {
+                doc.forEach((key) => {
+                    setHistoryValues(key.data("data").data);
+                })
+            });
+        return () => {
+            unsub();
+            history();
+        };
+    };
+    const getSensorInfo = async () => {
+        const SensorInfo = await getDocs(query(collection(db, 'SensorInfo')))
+
+        let si = [];
+
+        SensorInfo.docs.map((doc) => {
+            si.push(doc.data());
+        });
+
+        setSensorInfo(si);
+    }
+
     useEffect(() => {
+        //if logged in, check if admin
+        if (auth.currentUser) {
+            checkAdmin()
+        }
         //checks if browser supports webgl
         if (!window.WebGLRenderingContext) {
             // the browser doesn't even know what WebGL is
@@ -94,13 +134,15 @@ export default function Home() {
                 alert("WebGL is supported, but disabled :-(. If you need help, go to: https://get.webgl.org/troubleshooting")
             }
         }
+        getData()
+        getSensorInfo()
     }, [auth]);
-
+    
     return (
         <main>
             <div className="data-container z-[200] flex overflow-auto flip2">
-                {Object.keys(latestValues).map((k) => {
-                    return <SensorData key={k} data={latestValues[k]}/>
+                {sensorInfo.map((v, i) => {
+                    return <SensorData key={i} data={dataValues[v.name]} dataNames={v.name} min={v.min} max={v.max} symbol={v.symbol}/>
                 })}
                 <button className="flip-button" onClick={switchContainer}>&#8634;</button>
             </div>
@@ -111,13 +153,13 @@ export default function Home() {
             <div id="canvas-container" className="scene">
                 <Canvas
                     shadows={true}
-                    camera={{position: [15, 7, 0],}}
+                    camera={{position: [0, 7, -15],}}
                     className="canvas"
                 >
-                    <Suspense fallback={<LoadingScreen/>}>
+                    <Suspense fallback={loadingScreen}>
                         <Text position={[8.7, -4, 10.01]} onClick={handelLoginButton}>Login</Text>
-                        {/*<gridHelper args={[20, 20]}/>*/}
-                        {/*<axesHelper args={[50]}/>*/}
+                        <gridHelper args={[20, 20]}/>
+                        <axesHelper args={[50]}/>
                         <Controls/>
                         <ambientLight intensity={0.2} color={"white"}/>
                         <LightBulb position={[10, 15, 10]}/>

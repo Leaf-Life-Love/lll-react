@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-    --foreground-rgb: 0, 0, 0;
+    --foreground-rgb: 255, 255, 255;
     --background-start-rgb: 214, 219, 220;
     --background-end-rgb: 255, 255, 255;
 }
@@ -11,8 +11,8 @@
 @media (prefers-color-scheme: dark) {
     :root {
         --foreground-rgb: 255, 255, 255;
-        --background-start-rgb: 0, 0, 0;
-        --background-end-rgb: 0, 0, 0;
+        --background-start-rgb: 255, 255, 255;
+        --background-end-rgb: 255, 255, 255;
     }
 }
 
@@ -34,7 +34,7 @@ body {
 
 .canvas {
     @apply
-    bg-sky-300
+    bg-gray-100
     fixed;
 }
 
@@ -100,30 +100,31 @@ body {
     flex-wrap
     justify-around
     pt-3
-    overflow-auto;
+    overflow-auto
 }
 
 .temp-container {
     @apply
     w-[120px]
-    items-end
+    items-start
     flex
     justify-center
     self-start
-    flex-initial;
+    flex-initial
 }
 
 .outer-circle {
     @apply
     rounded-tr-full
     rounded-tl-full
-    bg-gradient-to-r from-blue-400 via-purple-500 to-red-500
+    /*bg-gradient-to-r from-blue-400 via-purple-500 to-red-500*/
     w-[120px]
     h-[60px]
     flex
     items-end
     justify-center
-    mb-5
+    mt-6
+    mb-1
     border-black
     border
 }
@@ -132,13 +133,11 @@ body {
     @apply
     w-[6px]
     h-[58px]
-        /*mb-1*/
     origin-bottom
     absolute
     flex
     items-start
     justify-center
-    /*bg-black*/
 }
 
 .inner-circle {
@@ -155,7 +154,7 @@ body {
     absolute
     border-t-black
     border-x-black
-    border;
+    border
 }
 
 .bottom-border {
@@ -175,7 +174,7 @@ body {
     border-2
     border-gray-400
     origin-right
-    absolute;
+    absolute
 }
 
 .history-container {
@@ -190,7 +189,7 @@ body {
     left-5
     top-5
     flex-col
-    overflow-auto;
+    overflow-auto
 }
 
 .flip-button {
@@ -201,15 +200,15 @@ body {
     h-auto
     absolute
     left-2
-    top-[-2px];
+    top-[-2px]
 }
 
 .flip {
-    animation:  flip 1s;
+    animation: flip 1s;
 }
 
 .flip2 {
-    animation:  flip2 1s;
+    animation: flip2 1s;
 }
 
 @keyframes flip {
@@ -248,4 +247,71 @@ body {
 
 .z-49 {
     z-index: 49;
+}
+
+.dashboard-items {
+    @apply
+    flex
+    flex-row
+    flex-wrap
+    justify-around
+    items-center
+    w-screen
+    h-screen
+    overflow-auto;
+}
+
+.plant-form {
+    @apply
+    p-6
+    w-fit
+    h-fit
+    shadow-xl
+}
+
+.admin-form {
+    @apply
+    w-fit
+    h-fit
+    p-6
+    shadow-xl
+    flex
+    flex-col
+    items-center
+}
+
+.form-input {
+    @apply
+    block
+    w-full
+    px-4
+    py-2
+    rounded-lg
+    border
+    border-gray-300
+    focus:outline-none
+    focus:ring-2
+    focus:ring-green-500
+    focus:border-green-500
+    text-center;
+}
+
+.form-input-container {
+    @apply
+    container
+    mx-auto
+    p-4
+    bg-white
+
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/*The same as above but for firefox*/
+input[type=number] {
+    -moz-appearance: textfield;
 }
