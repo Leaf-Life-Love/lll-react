@@ -8,7 +8,7 @@ import LightBulb from "src/components/lightbulb";
 import Controls from "src/components/controls";
 import Tower from "src/components/tower";
 import LoadingScreen from "src/components/loadingscreen";
-import DataChart from "@/src/components/charts/dataChart";
+import SensorChart from "@/src/components/charts/sensorChart";
 import './globals.css'
 import SensorData from "@/src/components/data/sensorData";
 import {collection, limit, onSnapshot, orderBy, query} from "firebase/firestore";
@@ -18,42 +18,37 @@ export default function Home() {
     const auth = getAuth();
     const provider = new OAuthProvider('microsoft.com');
 
-    const [dataValues, setDataValues] = useState([]);
+    const [latestValues, setLatestValues] = useState([]);
+    const [historyValues, setHistoryValues] = useState([]);
 
     useEffect(() => {
         const getData = () => {
-            const unsub = onSnapshot(query(collection(db, "Sensors"), orderBy("date", "desc"), limit(1)), (doc) => {
+            const latest = onSnapshot(query(collection(db, "Sensors"), orderBy("date", "desc"), limit(1)), (doc) => {
                 doc.forEach((key) => {
-                    setDataValues(key.data("data").data);
+                    setLatestValues(key.data("data").data);
+                })
+            });
+
+            const history = onSnapshot(query(collection(db, "Sensors"), orderBy("date", "desc"), limit(10)), (doc) => {
+                doc.forEach((key) => {
+                    setHistoryValues(key.data("data").data);
                 })
             });
 
             return () => {
-                unsub();
+                latest();
+                history();
             };
 
         };
         getData();
     }, []);
-console.log(dataValues)
+
     provider.setCustomParameters({
         prompt: 'consent',
         tenant: 'e8e5eb49-74bd-45b9-905a-1193cb5a9913',
     });
     provider.addScope('User.Read');
-
-    getRedirectResult(auth)
-        .then((result) => {
-            // User is signed in.
-            // IdP data available in result.additionalUserInfo.profile.
-            // Get the OAuth access token and ID Token
-            const credential = OAuthProvider.credentialFromResult(result);
-            const accessToken = credential.accessToken;
-            const idToken = credential.idToken;
-        })
-        .catch((error) => {
-            console.log(error)
-        });
 
     const handelLoginButton = () => {
         signInWithPopup(auth, provider)
@@ -104,13 +99,13 @@ console.log(dataValues)
     return (
         <main>
             <div className="data-container z-[200] flex overflow-auto flip2">
-                {Object.keys(dataValues).map((k) => {
-                    return <SensorData key={k} data={dataValues[k]}/>
+                {Object.keys(latestValues).map((k) => {
+                    return <SensorData key={k} data={latestValues[k]}/>
                 })}
                 <button className="flip-button" onClick={switchContainer}>&#8634;</button>
             </div>
             <div className="history-container hidden z-[100] flip">
-                <DataChart/>
+                <SensorChart/>
                 <button className="flip-button" onClick={switchContainer}>&#8634;</button>
             </div>
             <div id="canvas-container" className="scene">
