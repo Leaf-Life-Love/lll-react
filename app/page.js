@@ -12,7 +12,7 @@ import LightBulb from "src/components/lightbulb";
 import Controls from "@/src/components/controls/controls";
 import Tower from "@/src/components/Meshes/tower";
 import LoadingScreen from "src/components/loadingscreen";
-import DataChart from "@/src/components/charts/dataChart";
+import SensorChart from "@/src/components/charts/sensorChart";
 import './globals.css'
 import SensorData from "@/src/components/data/sensorData";
 import loadingscreen from "src/components/loadingscreen";
@@ -23,14 +23,17 @@ export default function Home() {
     let isAdmin = false;
     let fullRights = false;
 
-    const [sensorInfo, setSensorInfo] = useState([]);
 
-    const [dataValues, setDataValues] = useState([]);
+    const [latestValues, setLatestValues] = useState([]);
+    const [historyValues, setHistoryValues] = useState([]);
+    const [sensorInfo, setSensorInfo] = useState([]);
+   const [dataValues, setDataValues] = useState([]);
     const [dataKeys, setDataKeys] = useState([]);
     const [minValue, setMinValue] = useState([]);
     const [maxValue, setMaxValue] = useState([]);
     const [sensorSymbol, setSensorSymbol] = useState([]);
     let loadingScreen = null;
+
 
     provider.setCustomParameters({
         prompt: 'consent',
@@ -91,8 +94,15 @@ export default function Home() {
                 setDataKeys(Object.keys(doc.data().data));
             })
         });
+      
+        const history = onSnapshot(query(collection(db, "Sensors"), orderBy("date", "desc"), limit(10)), (doc) => {
+                doc.forEach((key) => {
+                    setHistoryValues(key.data("data").data);
+                })
+            });
         return () => {
             unsub();
+            history();
         };
     };
     const getSensorInfo = async () => {
@@ -127,7 +137,7 @@ export default function Home() {
         getData()
         getSensorInfo()
     }, [auth]);
-    // console.log(dataValues)
+    
     return (
         <main>
             <div className="data-container z-[200] flex overflow-auto flip2">
@@ -137,7 +147,7 @@ export default function Home() {
                 <button className="flip-button" onClick={switchContainer}>&#8634;</button>
             </div>
             <div className="history-container hidden z-[100] flip">
-                <DataChart/>
+                <SensorChart/>
                 <button className="flip-button" onClick={switchContainer}>&#8634;</button>
             </div>
             <div id="canvas-container" className="scene">
