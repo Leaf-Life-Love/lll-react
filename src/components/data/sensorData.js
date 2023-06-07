@@ -39,7 +39,7 @@ function SensorData({data, dataNames, min, max, symbol}) {
 
 export default SensorData;
 
-//ORP:
+//ORP: linear-gradient(to right, rgb(0, 240, 255), rgb(255, 0, 0)"
 //ph: rgb(148, 0, 211), rgb(0, 255, 54), rgb(255, 0, 0)
 //Temp: rgb(0, 240, 255), rgb(255, 0, 0)
 //watertemp: rgb(0, 240, 255), rgb(255, 0, 0)
