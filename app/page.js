@@ -26,8 +26,8 @@ export default function Home() {
 
     const [latestValues, setLatestValues] = useState([]);
     const [historyValues, setHistoryValues] = useState([]);
+    const [historyDates, setHistoryDates] = useState([]);
     const [sensorInfo, setSensorInfo] = useState([]);
-   const [dataValues, setDataValues] = useState([]);
     const [dataKeys, setDataKeys] = useState([]);
     const [minValue, setMinValue] = useState([]);
     const [maxValue, setMaxValue] = useState([]);
@@ -88,23 +88,33 @@ export default function Home() {
     }
 
     const getData = () => {
-        const unsub = onSnapshot(query(collection(db, "Sensors"), orderBy("date", "desc"), limit(1)), (doc) => {
+        const latest = onSnapshot(query(collection(db, "Sensors"), orderBy("date", "desc"), limit(1)), (doc) => {
             doc.forEach((doc) => {
-                setDataValues(doc.data("data").data);
+                setLatestValues(doc.data("data").data);
                 setDataKeys(Object.keys(doc.data().data));
             })
         });
-
-        const history = onSnapshot(query(collection(db, "Sensors"), orderBy("date", "desc"), limit(10)), (doc) => {
-                doc.forEach((key) => {
-                    setHistoryValues(key.data("data").data);
-                })
-            });
+      
         return () => {
-            unsub();
-            history();
+            latest();
         };
     };
+
+    const getHistory = async () => {
+        const querySnapshot = await getDocs(query(collection(db, "Sensors"), orderBy("date", "desc"), limit(10)));
+
+        const historyValues = [];
+        const historyDates = [];
+
+        querySnapshot.forEach((doc) => {
+            historyValues.push(doc.data().data);
+            historyDates.push(doc.data().date);
+        });
+
+        setHistoryValues(historyValues);
+        setHistoryDates(historyDates);
+    }
+
     const getSensorInfo = async () => {
         const SensorInfo = await getDocs(query(collection(db, 'SensorInfo')))
 
@@ -136,18 +146,22 @@ export default function Home() {
         }
         getData()
         getSensorInfo()
+        getHistory()
     }, [auth]);
 
     return (
         <main>
             <div className="data-container z-[200] flex overflow-auto flip2">
                 {sensorInfo.map((v, i) => {
-                    return <SensorData key={i} data={dataValues[v.name]} dataNames={v.name} min={v.min} max={v.max} symbol={v.symbol}/>
+                    return <SensorData key={i} data={latestValues[v.name]} dataNames={v.name} min={v.min} max={v.max} symbol={v.symbol}/>
                 })}
                 <button className="flip-button" onClick={switchContainer}>&#8634;</button>
             </div>
             <div className="history-container hidden z-[100] flip">
-                <SensorChart/>
+                {sensorInfo.map((v, i) => {
+                    return <SensorChart key={i} data={historyValues.map(value => value[v.name])} label={v.name} date={historyDates}/>
+                })}
+
                 <button className="flip-button" onClick={switchContainer}>&#8634;</button>
             </div>
             <div id="canvas-container" className="scene">
