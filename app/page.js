@@ -94,7 +94,7 @@ export default function Home() {
                 setDataKeys(Object.keys(doc.data().data));
             })
         });
-
+      
         return () => {
             latest();
         };
@@ -172,8 +172,8 @@ export default function Home() {
                 >
                     <Suspense fallback={loadingScreen}>
                         <Text position={[8.7, -4, 10.01]} onClick={handelLoginButton}>Login</Text>
-                        <gridHelper args={[20, 20]}/>
-                        <axesHelper args={[50]}/>
+                        {/*<gridHelper args={[20, 20]}/>*/}
+                        {/*<axesHelper args={[50]}/>*/}
                         <Controls/>
                         <ambientLight intensity={0.2} color={"white"}/>
                         <LightBulb position={[10, 15, 10]}/>
