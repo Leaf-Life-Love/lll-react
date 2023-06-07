@@ -94,7 +94,7 @@ export default function Home() {
                 setDataKeys(Object.keys(doc.data().data));
             })
         });
-      
+
         const history = onSnapshot(query(collection(db, "Sensors"), orderBy("date", "desc"), limit(10)), (doc) => {
                 doc.forEach((key) => {
                     setHistoryValues(key.data("data").data);
@@ -137,7 +137,7 @@ export default function Home() {
         getData()
         getSensorInfo()
     }, [auth]);
-    
+
     return (
         <main>
             <div className="data-container z-[200] flex overflow-auto flip2">
@@ -158,8 +158,8 @@ export default function Home() {
                 >
                     <Suspense fallback={loadingScreen}>
                         <Text position={[8.7, -4, 10.01]} onClick={handelLoginButton}>Login</Text>
-                        <gridHelper args={[20, 20]}/>
-                        <axesHelper args={[50]}/>
+                        {/*<gridHelper args={[20, 20]}/>*/}
+                        {/*<axesHelper args={[50]}/>*/}
                         <Controls/>
                         <ambientLight intensity={0.2} color={"white"}/>
                         <LightBulb position={[10, 15, 10]}/>

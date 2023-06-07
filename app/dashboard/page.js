@@ -246,7 +246,6 @@ export default function Page() {
         }
     }
 
-
     return (
         <div className="flex text-black justify-center">
             <div className="dashboard-items">
