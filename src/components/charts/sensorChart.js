@@ -2,15 +2,21 @@ import React from "react";
 import Chart from "chart.js/auto";
 import {Line} from "react-chartjs-2";
 
-function SensorChart() {
+function SensorChart({data, label, date}) {
+    const dates = date.map((timestamp) => timestamp.toDate());
+    const days = dates.map((date) => date.getDate());
+    const months = dates.map((date) => date.getMonth() + 1);
+    const labels = days.map((day, index) => `${day}/${months[index]}`);
+    const dataKeys = data.map((data) => data);
+
     return (
         <Line
             data={
                 {
-                    labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+                    labels: labels,
                     datasets: [
                         {
-                            label: 'Temperature average',
+                            label: label,
                             fill: false,
                             lineTension: 0.1,
                             backgroundColor: 'rgba(255,0,0,0.4)',
@@ -28,7 +34,7 @@ function SensorChart() {
                             pointHoverBorderWidth: 2,
                             pointRadius: 3,
                             pointHitRadius: 10,
-                            data: [21, 22, 19, 16, 5, 25, 0]
+                            data: dataKeys
                         }
                     ]
                 }
