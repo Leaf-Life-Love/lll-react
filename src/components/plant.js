@@ -80,7 +80,7 @@ export default function Plant(props) {
                 </div>
             </Html>
             <group rotation={[DtR(45), 0, 0]}>
-                <mesh position={[0, 0.14, 0]} visible={props.isVisible} onClick={deletePlant}>
+                <mesh position={[0, 0.14, 0]} visible={props.isVisible}>
                     <sphereGeometry args={[0.03, 32, 32]}/>
                     <meshStandardMaterial color="green" />
                 </mesh>
