@@ -94,7 +94,7 @@ export default function Home() {
                 setDataKeys(Object.keys(doc.data().data));
             })
         });
-      
+
         return () => {
             latest();
         };
@@ -153,13 +153,15 @@ export default function Home() {
         <main>
             <div className="data-container z-[200] flex overflow-auto flip2">
                 {sensorInfo.map((v, i) => {
-                    return <SensorData key={i} data={latestValues[v.name]} dataNames={v.name} min={v.min} max={v.max} symbol={v.symbol}/>
+                    return <SensorData key={i} data={latestValues[v.name]} dataNames={v.name} min={v.min} max={v.max}
+                                       symbol={v.symbol}/>
                 })}
                 <button className="flip-button" onClick={switchContainer}>&#8634;</button>
             </div>
             <div className="history-container hidden z-[100] flip">
                 {sensorInfo.map((v, i) => {
-                    return <SensorChart key={i} data={historyValues.map(value => value[v.name])} label={v.name} date={historyDates}/>
+                    return <SensorChart key={i} data={historyValues.map(value => value[v.name])} label={v.name}
+                                        date={historyDates}/>
                 })}
 
                 <button className="flip-button" onClick={switchContainer}>&#8634;</button>
@@ -169,6 +171,9 @@ export default function Home() {
                     shadows={true}
                     camera={{position: [0, 7, -15],}}
                     className="canvas"
+                    onCreated={(state) => {
+                        state.setEvents({filter: (intersections) => intersections.filter(i => i.object.visible)})
+                    }}
                 >
                     <Suspense fallback={loadingScreen}>
                         <Text position={[8.7, -4, 10.01]} onClick={handelLoginButton}>Login</Text>

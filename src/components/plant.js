@@ -39,13 +39,14 @@ export default function Plant(props) {
         await addDoc(collection(db, "Tower"), plant);
     }
 
-    const deletePlant = async () => {
-        // confirm("Weet je zeker dat je deze plant wilt verwijderen?");
-        // // if (confirm) {
-        // //     // deleteDoc(collection(db, "Tower"), potId);
-        // //     deleteDoc(doc(db, "Tower", potId));
-        // // }
-        console.log("no");
+    const deletePlant = () => {
+        confirm("Weet je zeker dat je deze plant wilt verwijderen?");
+        if (confirm) {
+            // deleteDoc(collection(db, "Tower"), potId);
+            // deleteDoc(doc(db, "Tower", potId));
+            // console.log("yes");
+        }
+        // console.log("no");
     }
 
     useEffect(() => {
@@ -80,7 +81,7 @@ export default function Plant(props) {
                 </div>
             </Html>
             <group rotation={[DtR(45), 0, 0]}>
-                <mesh position={[0, 0.14, 0]} visible={props.isVisible}>
+                <mesh position={[0, 0.14, 0]} visible={props.isVisible} onClick={props.isVisible ? deletePlant : null}>
                     <sphereGeometry args={[0.03, 32, 32]}/>
                     <meshStandardMaterial color="green" />
                 </mesh>
@@ -90,7 +91,7 @@ export default function Plant(props) {
                         scale={0.1}
                         color="lightgrey"
                         position={[0, 0.01, 0.01]}
-                        onClick={addPlant}
+                        onClick={!props.isVisible ? addPlant : null}
                     >
                         +
                     </Text>
