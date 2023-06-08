@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Html, Text } from "@react-three/drei";
 import { MathUtils } from "three";
 import { db } from "@/src/firebase/config";
-import { collection, query, getDocs, addDoc, deleteDoc, doc } from "firebase/firestore";
+import { collection, query, getDocs, addDoc, deleteDoc, doc, where } from "firebase/firestore";
 
 export const DtR = (degrees) => {
     return MathUtils.degToRad(degrees);
@@ -39,15 +39,22 @@ export default function Plant(props) {
         await addDoc(collection(db, "Tower"), plant);
     }
 
-    const deletePlant = () => {
-        confirm("Weet je zeker dat je deze plant wilt verwijderen?");
-        if (confirm) {
-            // deleteDoc(collection(db, "Tower"), potId);
-            // deleteDoc(doc(db, "Tower", potId));
-            // console.log("yes");
+    const deletePlant = async () => {
+        const text = "Weet je zeker dat je deze plant wilt verwijderen?";
+        if (confirm(text) === true) {
+            const querySnapshot = await getDocs(
+                query(collection(db, "Tower"), where("Pot", "==", potId))
+            );
+            querySnapshot.forEach((doc) => {
+                deleteDoc(doc.ref);
+            });
+            console.log("Document(s) deleted successfully.");
+        } else {
+            console.log("No");
         }
-        // console.log("no");
-    }
+    };
+
+
 
     useEffect(() => {
         const id = parseInt(props.name.slice(4));
