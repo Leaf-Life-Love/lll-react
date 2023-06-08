@@ -171,7 +171,7 @@ export default function Home() {
                     }}
                 >
                     {/*<Perf position={"top-right"}/>*/}
-                    <OrbitControls enableDamping={false} minPolarAngle={Math.PI / 2.5} maxPolarAngle={Math.PI - Math.PI}/>
+                    <OrbitControls enableDamping={false} minPolarAngle={Math.PI / 2.5} maxPolarAngle={Math.PI - Math.PI} minDistance={1} maxDistance={20}/>
                     <Suspense fallback={loadingScreen}>
                         <Text position={[8.7, -4, 10.01]} onClick={handelLoginButton}>Login</Text>
                         {/*<gridHelper args={[20, 20]}/>*/}
