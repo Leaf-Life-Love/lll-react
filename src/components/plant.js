@@ -36,7 +36,9 @@ export default function Plant(props) {
         const Pot = potId;
         const Name = document.querySelector(`#plant-name-${props.name.slice(4)}`).value;
         const plant = { Pot, Name };
-        await addDoc(collection(db, "Tower"), plant);
+        await addDoc(collection(db, "Tower"), plant).then(() => {
+            closeDialog();
+        });
     }
 
     const deletePlant = async () => {
