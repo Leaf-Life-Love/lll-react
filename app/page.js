@@ -29,9 +29,9 @@ export default function Home() {
     const [historyDates, setHistoryDates] = useState([]);
     const [sensorInfo, setSensorInfo] = useState([]);
     const [dataKeys, setDataKeys] = useState([]);
-    const [minValue, setMinValue] = useState([]);
-    const [maxValue, setMaxValue] = useState([]);
-    const [sensorSymbol, setSensorSymbol] = useState([]);
+    // const [minValue, setMinValue] = useState([]);
+    // const [maxValue, setMaxValue] = useState([]);
+    // const [sensorSymbol, setSensorSymbol] = useState([]);
     let loadingScreen = null;
 
 
@@ -94,7 +94,7 @@ export default function Home() {
                 setDataKeys(Object.keys(doc.data().data));
             })
         });
-      
+
         return () => {
             latest();
         };
@@ -123,7 +123,6 @@ export default function Home() {
         SensorInfo.docs.map((doc) => {
             si.push(doc.data());
         });
-
         setSensorInfo(si);
     }
 
@@ -153,7 +152,9 @@ export default function Home() {
         <main>
             <div className="data-container z-[200] flex overflow-auto flip2">
                 {sensorInfo.map((v, i) => {
-                    return <SensorData key={i} data={latestValues[v.name]} dataNames={v.name} min={v.min} max={v.max} symbol={v.symbol}/>
+                    console.log(v)
+                    return <SensorData key={i} data={latestValues[v.name]} dataNames={v.name} min={v.min} max={v.max}
+                                       symbol={v.symbol} colorLeft={v.colorLeft} colorMid={v.colorMid} colorRight={v.colorRight}/>
                 })}
                 <button className="flip-button" onClick={switchContainer}>&#8634;</button>
             </div>

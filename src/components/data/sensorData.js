@@ -2,12 +2,15 @@ import React, {useState, useEffect} from "react";
 import {collection, doc, onSnapshot, query, Timestamp, orderBy, limit, getDocs, where} from "firebase/firestore";
 import {db} from "@/src/firebase/config";
 
-function SensorData({data, dataNames, min, max, symbol}) {
+function SensorData({data, dataNames, min, max, symbol, colorLeft, colorMid, colorRight}) {
     const [dataValues, setDataValues] = useState(data);
     const [dataKeys, setDataKeys] = useState(dataNames);
     const [minValue, setMinValue] = useState(min);
     const [maxValue, setMaxValue] = useState(max);
     const [sensorSymbol, setSensorSymbol] = useState(symbol);
+    const [leftColor, setLeftColor] = useState(colorLeft);
+    const [midColor, setMidColor] = useState(colorMid);
+    const [rightColor, setRightColor] = useState(colorRight);
 
     const dataDeg = (currentValue, minValue, maxValue) =>{
         const minDeg = -82;
@@ -26,7 +29,7 @@ function SensorData({data, dataNames, min, max, symbol}) {
     return (
         <div className="temp-container">
             <div className="text-black absolute">{dataKeys}</div>
-            <div className="outer-circle" style={{backgroundImage: "linear-gradient(to right, rgb(0, 240, 255), rgb(255, 0, 0)"}}>
+            <div className="outer-circle" style={{backgroundImage: `linear-gradient(to right,${leftColor},${midColor},${rightColor}`}}>
                 <div className="temp-value" style={{ transform: `rotate(${dataDeg(dataValues, minValue, maxValue)}deg)`}}>
                     <div className="temp-circle"></div>
                 </div>
@@ -38,12 +41,3 @@ function SensorData({data, dataNames, min, max, symbol}) {
 }
 
 export default SensorData;
-
-//ORP: linear-gradient(to right, rgb(0, 240, 255), rgb(255, 0, 0)"
-//ph: rgb(148, 0, 211), rgb(0, 255, 54), rgb(255, 0, 0)
-//Temp: rgb(0, 240, 255), rgb(255, 0, 0)
-//watertemp: rgb(0, 240, 255), rgb(255, 0, 0)
-//EC: rgb(0, 0, 0), rgb(255, 255, 255)
-//UV: (158,0,255), (140,108,255), (174,105,226)
-//CO2: rgb(0, 0, 0), rgb(129, 166, 119), rgb(174,105,226)
-//humidity: rgb(255, 255, 255), rgb(171, 240, 242), rgb(74, 226, 232)
