@@ -174,6 +174,8 @@ export default function Home() {
                         state.setEvents({filter: (intersections) => intersections.filter(i => i.object.visible)})
                     }}
                 >
+                    {/*<Perf position={"top-right"}/>*/}
+                    <OrbitControls enableDamping={false} minPolarAngle={Math.PI / 2.5} maxPolarAngle={Math.PI - Math.PI}/>
                     <Suspense fallback={loadingScreen}>
                         <Text position={[8.7, -4, 10.01]} onClick={handelLoginButton}>Login</Text>
                         {/*<gridHelper args={[20, 20]}/>*/}
