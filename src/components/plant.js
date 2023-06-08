@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Html, Text } from "@react-three/drei";
 import { MathUtils } from "three";
 import { db } from "@/src/firebase/config";
-import { collection, query, getDocs, addDoc, deleteDoc, doc } from "firebase/firestore";
+import { collection, query, getDocs, addDoc, deleteDoc, doc, where } from "firebase/firestore";
 
 export const DtR = (degrees) => {
     return MathUtils.degToRad(degrees);
@@ -40,13 +40,21 @@ export default function Plant(props) {
     }
 
     const deletePlant = async () => {
-        // confirm("Weet je zeker dat je deze plant wilt verwijderen?");
-        // // if (confirm) {
-        // //     // deleteDoc(collection(db, "Tower"), potId);
-        // //     deleteDoc(doc(db, "Tower", potId));
-        // // }
-        console.log("no");
-    }
+        const text = "Weet je zeker dat je deze plant wilt verwijderen?";
+        if (confirm(text) === true) {
+            const querySnapshot = await getDocs(
+                query(collection(db, "Tower"), where("Pot", "==", potId))
+            );
+            querySnapshot.forEach((doc) => {
+                deleteDoc(doc.ref);
+            });
+            console.log("Document(s) deleted successfully.");
+        } else {
+            console.log("No");
+        }
+    };
+
+
 
     useEffect(() => {
         const id = parseInt(props.name.slice(4));
@@ -80,7 +88,7 @@ export default function Plant(props) {
                 </div>
             </Html>
             <group rotation={[DtR(45), 0, 0]}>
-                <mesh position={[0, 0.14, 0]} visible={props.isVisible}>
+                <mesh position={[0, 0.14, 0]} visible={props.isVisible} onClick={props.isVisible ? deletePlant : null}>
                     <sphereGeometry args={[0.03, 32, 32]}/>
                     <meshStandardMaterial color="green" />
                 </mesh>
@@ -90,7 +98,7 @@ export default function Plant(props) {
                         scale={0.1}
                         color="lightgrey"
                         position={[0, 0.01, 0.01]}
-                        onClick={addPlant}
+                        onClick={!props.isVisible ? addPlant : null}
                     >
                         +
                     </Text>
