@@ -58,9 +58,9 @@ export default function Tower(props) {
             ))}
             <Image
                 url="/thomas.jpeg"
-                rotation={[DtR(-90), DtR(0), DtR(180)]}
-                scale={0.1}
-                position={[0, -0.3415, 0]}
+                rotation={[DtR(0), DtR(-90), DtR(0)]}
+                scale={0.01}
+                position={[0, -0.005, 0]}
             />
         </mesh>
     );

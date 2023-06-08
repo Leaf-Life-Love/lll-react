@@ -1,21 +1,21 @@
 'use client'
 import React, {Suspense, useEffect, useState} from "react";
 import {getAuth, signInWithPopup, OAuthProvider, getRedirectResult,} from "firebase/auth";
-import {Text, Loader} from "@react-three/drei";
+import {Text, Loader, OrbitControls} from "@react-three/drei";
 import {Canvas} from '@react-three/fiber'
 import JsonFind from 'json-find'
 import {db} from "@/src/firebase/config";
 import {collection, query, doc, getDoc, getDocs, where, limit, onSnapshot, orderBy} from "firebase/firestore";
+import { Perf } from 'r3f-perf'
 
 import Floor from '@/src/components/Meshes/floor'
 import LightBulb from "src/components/lightbulb";
-import Controls from "@/src/components/controls/controls";
 import Tower from "@/src/components/Meshes/tower";
 import LoadingScreen from "src/components/loadingscreen";
 import SensorChart from "@/src/components/charts/sensorChart";
 import './globals.css'
 import SensorData from "@/src/components/data/sensorData";
-import loadingscreen from "src/components/loadingscreen";
+// import loadingscreen from "src/components/loadingscreen";
 
 export default function Home() {
     const auth = getAuth();
@@ -23,15 +23,11 @@ export default function Home() {
     let isAdmin = false;
     let fullRights = false;
 
-
     const [latestValues, setLatestValues] = useState([]);
     const [historyValues, setHistoryValues] = useState([]);
     const [historyDates, setHistoryDates] = useState([]);
     const [sensorInfo, setSensorInfo] = useState([]);
     const [dataKeys, setDataKeys] = useState([]);
-    // const [minValue, setMinValue] = useState([]);
-    // const [maxValue, setMaxValue] = useState([]);
-    // const [sensorSymbol, setSensorSymbol] = useState([]);
     let loadingScreen = null;
 
 
@@ -180,7 +176,6 @@ export default function Home() {
                         <Text position={[8.7, -4, 10.01]} onClick={handelLoginButton}>Login</Text>
                         {/*<gridHelper args={[20, 20]}/>*/}
                         {/*<axesHelper args={[50]}/>*/}
-                        <Controls/>
                         <ambientLight intensity={0.2} color={"white"}/>
                         <LightBulb position={[10, 15, 10]}/>
                         <LightBulb position={[-10, 5, -10]}/>
