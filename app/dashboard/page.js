@@ -1,7 +1,7 @@
 "use client"
 import React, {useEffect, useState} from "react";
 import {useRouter} from "next/navigation";
-import {getAuth, signInWithPopup, OAuthProvider, getRedirectResult,} from "firebase/auth";
+import {getAuth, signInWithPopup, OAuthProvider, getRedirectResult, onAuthStateChanged} from "firebase/auth";
 import {db} from "@/src/firebase/config";
 import {collection, query, doc, getDoc, getDocs, where, addDoc} from "firebase/firestore";
 
@@ -30,11 +30,17 @@ export default function Page() {
     });
 
     useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, async (user) => {
+            checkAdmin();
+        });
         if (!auth.currentUser) {
             signInWithPopup(auth, provider)
+
         } else {
-            checkAdmin();
+            unsubscribe()
         }
+
+        return () => unsubscribe()
     });
 
     provider.setCustomParameters({
@@ -45,15 +51,17 @@ export default function Page() {
 
     const checkAdmin = async () => {
         const user = auth.currentUser;
-        const getAdmin = await getDocs(query(collection(db, 'Admins'), where('Email', '==', user.email)))
-        if (getAdmin.empty) {
-            router.push('/')
-        } else {
-            setIsAdmin(true)
-        }
+        if (user) {
+            const getAdmin = await getDocs(query(collection(db, 'Admins'), where('Email', '==', user.email)))
+            if (getAdmin.empty) {
+                router.push('/')
+            } else {
+                setIsAdmin(true)
+            }
 
-        if (getAdmin.docs[0].data().AllRights) {
-            setAllRights(true)
+            if (getAdmin.docs[0].data().AllRights) {
+                setAllRights(true)
+            }
         }
     }
 
@@ -252,7 +260,8 @@ export default function Page() {
                 {showPlantForm()}
                 {showAdminForm()}
             </div>
-            <a className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-400 absolute bottom-5 left-4" href={"/"}>Go Back</a>
+            <a className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-400 absolute bottom-5 left-4"
+               href={"/"}>Go Back</a>
         </div>
     )
 }

@@ -1,35 +1,35 @@
 'use client'
-import React, {Suspense, useEffect, useState} from "react";
+import React, {Suspense, useEffect, useState, useContext} from "react";
 import {getAuth, signInWithPopup, OAuthProvider, getRedirectResult,} from "firebase/auth";
 import {Text, Loader, OrbitControls} from "@react-three/drei";
 import {Canvas} from '@react-three/fiber'
 import JsonFind from 'json-find'
 import {db} from "@/src/firebase/config";
 import {collection, query, doc, getDoc, getDocs, where, limit, onSnapshot, orderBy} from "firebase/firestore";
-import { Perf } from 'r3f-perf'
+// import {Perf} from 'r3f-perf'
+import AppContext from "@/src/context/AppContext";
 
 import Floor from '@/src/components/Meshes/floor'
 import LightBulb from "src/components/lightbulb";
 import Tower from "@/src/components/Meshes/tower";
-import LoadingScreen from "src/components/loadingscreen";
+import LoadingScreen from "@/src/components/loadingscreen";
 import SensorChart from "@/src/components/charts/sensorChart";
 import './globals.css'
 import SensorData from "@/src/components/data/sensorData";
-// import loadingscreen from "src/components/loadingscreen";
+import Loadingscreen from "@/src/components/loadingscreen";
 
 export default function Home() {
+    const context = useContext(AppContext);
     const auth = getAuth();
     const provider = new OAuthProvider('microsoft.com');
-    let isAdmin = false;
-    let fullRights = false;
 
     const [latestValues, setLatestValues] = useState([]);
     const [historyValues, setHistoryValues] = useState([]);
     const [historyDates, setHistoryDates] = useState([]);
     const [sensorInfo, setSensorInfo] = useState([]);
     const [dataKeys, setDataKeys] = useState([]);
+    const [FullRights, setFullRights] = useState(false);
     let loadingScreen = null;
-
 
     provider.setCustomParameters({
         prompt: 'consent',
@@ -37,20 +37,21 @@ export default function Home() {
     });
     provider.addScope('User.Read');
 
-    const checkAdmin = async () => {
-        const user = auth.currentUser;
-        const getAdmin = await getDocs(query(collection(db, 'Admins'), where('Email', '==', user.email)))
-        if (!getAdmin.empty) {
-            isAdmin = true
-        }
-        if (getAdmin.docs[0].data().AllRights) {
-            fullRights = true
-        }
-    }
-
     useEffect(() => {
-        loadingScreen = <LoadingScreen/>;
+        loadingScreen = <Loadingscreen/>
     }, [])
+
+    // const checkAdmin = async () => {
+    //     const user = auth.currentUser;
+    //     const getAdmin = await getDocs(query(collection(db, 'Admins'), where('Email', '==', user.email)))
+    //     if (!getAdmin.empty) {
+    //         // setIsAdmin(true)
+    //         context.setIsAdmin(true)
+    //     }
+    //     if (getAdmin.docs[0].data().AllRights) {
+    //         setFullRights(true)
+    //     }
+    // }
 
     const handelLoginButton = () => {
         signInWithPopup(auth, provider)
@@ -124,9 +125,9 @@ export default function Home() {
 
     useEffect(() => {
         //if logged in, check if admin
-        if (auth.currentUser) {
-            checkAdmin()
-        }
+        // if (auth.currentUser) {
+        //     checkAdmin()
+        // }
         //checks if browser supports webgl
         if (!window.WebGLRenderingContext) {
             // the browser doesn't even know what WebGL is
@@ -149,7 +150,8 @@ export default function Home() {
             <div className="data-container z-[200] flex overflow-auto flip2">
                 {sensorInfo.map((v, i) => {
                     return <SensorData key={i} data={latestValues[v.name]} dataNames={v.name} min={v.min} max={v.max}
-                                       symbol={v.symbol} colorLeft={v.colorLeft} colorMid={v.colorMid} colorRight={v.colorRight}/>
+                                       symbol={v.symbol} colorLeft={v.colorLeft} colorMid={v.colorMid}
+                                       colorRight={v.colorRight}/>
                 })}
                 <button className="flip-button" onClick={switchContainer}>&#8634;</button>
             </div>
@@ -171,15 +173,16 @@ export default function Home() {
                     }}
                 >
                     {/*<Perf position={"top-right"}/>*/}
-                    <OrbitControls enableDamping={false} minPolarAngle={Math.PI / 2.5} maxPolarAngle={Math.PI - Math.PI} minDistance={1} maxDistance={20}/>
+                    <OrbitControls enableDamping={false} minPolarAngle={Math.PI / 2.5} maxPolarAngle={Math.PI - Math.PI}
+                                   minDistance={1} maxDistance={20}/>
                     <Suspense fallback={loadingScreen}>
-                        <Text position={[8.7, -4, 10.01]} onClick={handelLoginButton}>Login</Text>
+                        <Text position={[8.7, -4, 10.01]} onClick={handelLoginButton} visible={!auth.currentUser}>Login</Text>
                         {/*<gridHelper args={[20, 20]}/>*/}
                         {/*<axesHelper args={[50]}/>*/}
                         <ambientLight intensity={0.2} color={"white"}/>
                         <LightBulb position={[10, 15, 10]}/>
                         <LightBulb position={[-10, 5, -10]}/>
-                        <Tower position={[0, 0, 0]}/>
+                        <Tower position={[0, 0, 0]} isAdmin={context.isAdmin}/>
                         <Floor position={[0, -4, 0]}/>
                     </Suspense>
                 </Canvas>
