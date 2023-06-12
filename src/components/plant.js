@@ -1,14 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Html, Text } from "@react-three/drei";
 import { MathUtils } from "three";
 import { db } from "@/src/firebase/config";
 import { collection, query, getDocs, addDoc, deleteDoc, doc, where } from "firebase/firestore";
-
+import AppContext from "@/src/context/AppContext";
 export const DtR = (degrees) => {
     return MathUtils.degToRad(degrees);
 };
 
 export default function Plant(props) {
+    const context = useContext(AppContext);
+    const isAdmin = context.isAdmin;
+
     const [potId, setPotId] = useState();
     const [plantNames, setPlantNames] = useState([]);
 
@@ -50,9 +53,9 @@ export default function Plant(props) {
             querySnapshot.forEach((doc) => {
                 deleteDoc(doc.ref);
             });
-            console.log("Document(s) deleted successfully.");
+            // console.log("Document(s) deleted successfully.");
         } else {
-            console.log("No");
+            // console.log("No");
         }
     };
 
@@ -90,17 +93,17 @@ export default function Plant(props) {
                 </div>
             </Html>
             <group rotation={[DtR(45), 0, 0]}>
-                <mesh position={[0, 0.14, 0]} visible={props.isVisible} onClick={props.isVisible ? deletePlant : null}>
+                <mesh position={[0, 0.14, 0]} visible={props.isVisible} onClick={props.isVisible && isAdmin ? deletePlant : null}>
                     <sphereGeometry args={[0.03, 32, 32]}/>
                     <meshStandardMaterial color="green" />
                 </mesh>
-                <mesh position={[0, 0.15, 0]} visible={!props.isVisible}>
+                <mesh position={[0, 0.15, 0]} visible={!props.isVisible && isAdmin}>
                     <Text
                         rotation={[DtR(-90), 0, 0]}
                         scale={0.1}
                         color="lightgrey"
                         position={[0, 0.01, 0.01]}
-                        onClick={!props.isVisible ? addPlant : null}
+                        onClick={!props.isVisible && isAdmin ? addPlant : null}
                     >
                         +
                     </Text>
