@@ -11,6 +11,8 @@ export const DtR = (degrees) => {
 export default function Plant(props) {
     const [potId, setPotId] = useState();
     const [plantNames, setPlantNames] = useState([]);
+    const [errorMessage, setErrorMessage] = useState("");
+    const [successMessage, setSuccessMessage] = useState("");
 
     const addPlant = () => {
         const dialog = document.querySelector(`#plant-dialog-${props.name.slice(4)}`);
@@ -36,8 +38,22 @@ export default function Plant(props) {
         const Pot = potId;
         const Name = document.querySelector(`#plant-name-${props.name.slice(4)}`).value;
         const plant = { Pot, Name };
-        await addDoc(collection(db, "Tower"), plant).then(() => {
-            closeDialog();
+
+        if (Name === "") {
+            setErrorMessage("Selecteer een plant");
+            return;
+        }
+
+        await addDoc(collection(db, "Tower"), plant)
+            .then(() => {
+            setSuccessMessage("Plant succesvol toegevoegd");
+            setTimeout(() => {
+                setSuccessMessage("");
+                closeDialog();
+            }, 2000);
+
+        }).catch((error) => {
+            setErrorMessage("Error bij plant toevoegen: ", error);
         });
     }
 
@@ -86,6 +102,8 @@ export default function Plant(props) {
                         </select>
                         <button onClick={closeDialog}>X</button>
                         <button onClick={addPlantToPot}>Voeg toe</button>
+                        {errorMessage && <p className="text-red-500 mt-2">{errorMessage}</p>}
+                        {successMessage && <p className="text-green-500">{successMessage}</p>}
                     </dialog>
                 </div>
             </Html>

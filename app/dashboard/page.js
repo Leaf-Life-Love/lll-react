@@ -14,6 +14,9 @@ export default function Page() {
 
     const [errorMessage, setErrorMessage] = useState("");
     const [successMessage, setSuccessMessage] = useState("");
+    const [adminErrorMessage, setAdminErrorMessage] = useState("");
+    const [adminSuccesMessage, setAdminSuccessMessage] = useState("");
+
 
     const [adminFormData, setAdminFormData] = useState({
         email: '',
@@ -290,7 +293,7 @@ export default function Page() {
                 setErrorMessage(error.message);
             });
 
-        //todo CLEAR ERROR MESSAGE WERKT NIET
+        //todo CLEAR ERROR MESSAGE
 
         if (errorMessage !== "") {
             setTimeout(() => {
@@ -331,6 +334,8 @@ export default function Page() {
                     >
                         Add Admin
                     </button>
+                    {adminErrorMessage && <p className="text-red-500 mt-2">{adminErrorMessage}</p>}
+                    {adminSuccesMessage && <p className="text-green-500">{adminSuccesMessage}</p>}
                     {/*</form>*/}
                 </div>
             )
@@ -350,14 +355,31 @@ export default function Page() {
     const submitAdmin = async () => {
         const emailPattern = new RegExp("^[a-zA-Z0-9._:$!%-]+@[a-zA-Z0-9.-]+.[a-zA-Z]$");
 
+        if (!adminFormData.email) {
+            setAdminErrorMessage("Please fill all fields");
+            setAdminSuccessMessage("")
+        } else if (!emailPattern.test(adminFormData.email)) {
+            setAdminErrorMessage("Please enter a valid email");
+            setAdminSuccessMessage("")
+        }
+
         if (adminFormData.email && emailPattern.test(adminFormData.email)) {
             await addDoc(collection(db, 'Admins'), {
                 Email: adminFormData.email,
                 AllRights: adminFormData.allRights
             }).then(() => {
-                alert("Admin added successfully")
+                setTimeout(() => {
+                    setAdminSuccessMessage("");
+                }, 3000); // Clear the success message after 3 seconds
+                setAdminSuccessMessage("Admin added successfully")
+                setAdminErrorMessage("")
+
+                //todo CLEAR FORM
+
+                adminFormData.email = ""
+                adminFormData.allRights = false
             }).catch((error) => {
-                alert(error)
+                setAdminErrorMessage(error.message)
             })
         }
     }
