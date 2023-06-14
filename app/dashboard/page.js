@@ -12,6 +12,12 @@ export default function Page() {
     const [isAdmin, setIsAdmin] = useState(false);
     const [allRights, setAllRights] = useState(false);
 
+    const [errorMessage, setErrorMessage] = useState("");
+    const [successMessage, setSuccessMessage] = useState("");
+    const [adminErrorMessage, setAdminErrorMessage] = useState("");
+    const [adminSuccesMessage, setAdminSuccessMessage] = useState("");
+
+
     const [adminFormData, setAdminFormData] = useState({
         email: '',
         allRights: false,
@@ -80,6 +86,7 @@ export default function Page() {
                             placeholder="Enter plant name"
                             id="name"
                             required={true}
+                            value={plantFormData.name}
                             onChange={(e) => handlePlantInput(e)}
                         />
                     </div>
@@ -90,11 +97,13 @@ export default function Page() {
                             type={"number"} id={"minPH"} placeholder={"Min"}
                             required={true} className={"form-input mb-2"}
                             onChange={(e) => handlePlantInput(e)}
+                            value={plantFormData.minPH}
                         />
                         <input
                             type={"number"} id={"maxPH"} placeholder={"Max"}
                             required={true} className={"form-input"}
                             onChange={(e) => handlePlantInput(e)}
+                            value={plantFormData.maxPH}
                         />
                     </div>
                     <div className="form-input-container">
@@ -103,11 +112,13 @@ export default function Page() {
                             type={"number"} id={"minPPM"} placeholder={"Min"}
                             required={true} className={"form-input mb-2"}
                             onChange={(e) => handlePlantInput(e)}
+                            value={plantFormData.minPPM}
                         />
                         <input
                             type={"number"} id={"maxPPM"} placeholder={"Max"}
                             required={true} className={"form-input"}
                             onChange={(e) => handlePlantInput(e)}
+                            value={plantFormData.maxPPM}
                         />
                     </div>
                     <div className="form-input-container">
@@ -116,11 +127,13 @@ export default function Page() {
                             type={"number"} id={"minEC"} placeholder={"Min"}
                             required={true} className={"form-input mb-2"}
                             onChange={(e) => handlePlantInput(e)}
+                            value={plantFormData.minEC}
                         />
                         <input
                             type={"number"} id={"maxEC"} placeholder={"Max"}
                             required={true} className={"form-input"}
                             onChange={(e) => handlePlantInput(e)}
+                            value={plantFormData.maxEC}
                         />
                     </div>
                     <div className="form-input-container">
@@ -129,11 +142,13 @@ export default function Page() {
                             type={"number"} id={"minTemp"} placeholder={"Min"}
                             required={true} className={"form-input mb-2"}
                             onChange={(e) => handlePlantInput(e)}
+                            value={plantFormData.minTemp}
                         />
                         <input
                             type={"number"} id={"maxTemp"} placeholder={"Max"}
                             required={true} className={"form-input"}
                             onChange={(e) => handlePlantInput(e)}
+                            value={plantFormData.maxTemp}
                         />
                     </div>
                     {/* Submit button */}
@@ -144,6 +159,8 @@ export default function Page() {
                     >
                         Create Plant
                     </button>
+                    {errorMessage && <p className="text-red-500 mt-2">{errorMessage}</p>}
+                    {successMessage && <p className="text-green-500">{successMessage}</p>}
                 </div>
             )
         }
@@ -178,6 +195,73 @@ export default function Page() {
 
     const submitPlant = async (e) => {
 
+        // Check if all fields are filled
+        if (
+            plantFormData.name === "" ||
+            plantFormData.minPH === "" ||
+            plantFormData.maxPH === "" ||
+            plantFormData.minPPM === "" ||
+            plantFormData.maxPPM === "" ||
+            plantFormData.minEC === "" ||
+            plantFormData.maxEC === "" ||
+            plantFormData.minTemp === "" ||
+            plantFormData.maxTemp === ""
+        ) {
+            setErrorMessage("Please fill all fields");
+            return;
+        }
+
+        // Check if all fields are numbers
+        if (
+            isNaN(plantFormData.minPH) ||
+            isNaN(plantFormData.maxPH) ||
+            isNaN(plantFormData.minPPM) ||
+            isNaN(plantFormData.maxPPM) ||
+            isNaN(plantFormData.minEC) ||
+            isNaN(plantFormData.maxEC) ||
+            isNaN(plantFormData.minTemp) ||
+            isNaN(plantFormData.maxTemp)
+        ) {
+            setErrorMessage("Please fill all fields with a number");
+            return;
+        }
+
+        // Check if all fields are positive numbers
+        if (
+            plantFormData.minPH < 0 ||
+            plantFormData.maxPH < 0 ||
+            plantFormData.minPPM < 0 ||
+            plantFormData.maxPPM < 0 ||
+            plantFormData.minEC < 0 ||
+            plantFormData.maxEC < 0 ||
+            plantFormData.minTemp < 0 ||
+            plantFormData.maxTemp < 0
+        ) {
+            setErrorMessage("Please fill all fields with a positive number");
+            return;
+        }
+
+        // Check if all fields are in the correct range
+        if (
+            plantFormData.minPH > plantFormData.maxPH ||
+            plantFormData.minPPM > plantFormData.maxPPM ||
+            plantFormData.minEC > plantFormData.maxEC ||
+            plantFormData.minTemp > plantFormData.maxTemp
+        ) {
+            setErrorMessage("Please fill all fields with the correct range");
+            return;
+        }
+
+        // Check if plant name already exists
+        const plantRef = await getDocs(
+            query(collection(db, "Plants"), where("Name", "==", plantFormData.name))
+        );
+        if (!plantRef.empty) {
+            setErrorMessage("Plant name already exists");
+            return;
+        }
+
+        // Add plant to firestore
         await addDoc(collection(db, 'Plants'), {
             Name: plantFormData.name,
             MinPH: plantFormData.minPH,
@@ -189,6 +273,41 @@ export default function Page() {
             MinTemp: plantFormData.minTemp,
             MaxTemp: plantFormData.maxTemp,
         })
+            .then(() => {
+                // Plant added successfully
+                setTimeout(() => {
+                    setSuccessMessage("");
+                }, 3000); // Clear the success message after 3 seconds
+                setSuccessMessage("Plant added successfully");
+
+                setErrorMessage(""); // Clear error message
+
+                // Clear form inputs
+                setPlantFormData({
+                    name: '',
+                    minPH: '',
+                    maxPH: '',
+                    minPPM: '',
+                    maxPPM: '',
+                    minEC: '',
+                    maxEC: '',
+                    minTemp: '',
+                    maxTemp: '',
+                });
+            })
+            .catch((error) => {
+                // Plant addition failed
+                setSuccessMessage(""); // Clear success message
+                setErrorMessage(error.message);
+            });
+
+        //todo CLEAR ERROR MESSAGE
+
+        if (errorMessage !== "") {
+            setTimeout(() => {
+                setErrorMessage("");
+            }, 5000); // Clear the error message after 5 seconds
+        }
     }
 
     const showAdminForm = () => {
@@ -201,7 +320,7 @@ export default function Page() {
                     {/* Admin name */}
                     <div className="mb-4 flex flex-col items-center">
                         <label className="block mb-1 font-semibold">All Rights</label>
-                        <input type="checkbox" id="allRights" onChange={(e) => handleAdminInput(e)}/>
+                        <input type="checkbox" id="allRights" value={adminFormData.allRights} onChange={(e) => handleAdminInput(e)}/>
                     </div>
                     {/* Admin email */}
                     <div className="mb-4">
@@ -211,6 +330,7 @@ export default function Page() {
                             type="email"
                             placeholder="Enter admin email"
                             id="email"
+                            value={adminFormData.email}
                             required={true}
                             onChange={(e) => handleAdminInput(e)}
                         />
@@ -223,6 +343,8 @@ export default function Page() {
                     >
                         Add Admin
                     </button>
+                    {adminErrorMessage && <p className="text-red-500 mt-2">{adminErrorMessage}</p>}
+                    {adminSuccesMessage && <p className="text-green-500">{adminSuccesMessage}</p>}
                     {/*</form>*/}
                 </div>
             )
@@ -242,14 +364,31 @@ export default function Page() {
     const submitAdmin = async () => {
         const emailPattern = new RegExp("^[a-zA-Z0-9._:$!%-]+@[a-zA-Z0-9.-]+.[a-zA-Z]$");
 
+        if (!adminFormData.email) {
+            setAdminErrorMessage("Please fill all fields");
+            setAdminSuccessMessage("")
+        } else if (!emailPattern.test(adminFormData.email)) {
+            setAdminErrorMessage("Please enter a valid email");
+            setAdminSuccessMessage("")
+        }
+
         if (adminFormData.email && emailPattern.test(adminFormData.email)) {
             await addDoc(collection(db, 'Admins'), {
                 Email: adminFormData.email,
                 AllRights: adminFormData.allRights
             }).then(() => {
-                alert("Admin added successfully")
+                setTimeout(() => {
+                    setAdminSuccessMessage("");
+                }, 3000); // Clear the success message after 3 seconds
+                setAdminSuccessMessage("Admin added successfully")
+                setAdminErrorMessage("")
+
+                setAdminFormData({
+                    email: '',
+                    allRights: false,
+                })
             }).catch((error) => {
-                alert(error)
+                setAdminErrorMessage(error.message)
             })
         }
     }
