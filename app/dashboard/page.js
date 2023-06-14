@@ -312,7 +312,7 @@ export default function Page() {
                     {/* Admin name */}
                     <div className="mb-4 flex flex-col items-center">
                         <label className="block mb-1 font-semibold">All Rights</label>
-                        <input type="checkbox" id="allRights" onChange={(e) => handleAdminInput(e)}/>
+                        <input type="checkbox" id="allRights" value={adminFormData.allRights} onChange={(e) => handleAdminInput(e)}/>
                     </div>
                     {/* Admin email */}
                     <div className="mb-4">
@@ -322,6 +322,7 @@ export default function Page() {
                             type="email"
                             placeholder="Enter admin email"
                             id="email"
+                            value={adminFormData.email}
                             required={true}
                             onChange={(e) => handleAdminInput(e)}
                         />
@@ -374,10 +375,10 @@ export default function Page() {
                 setAdminSuccessMessage("Admin added successfully")
                 setAdminErrorMessage("")
 
-                //todo CLEAR FORM
-
-                adminFormData.email = ""
-                adminFormData.allRights = false
+                setAdminFormData({
+                    email: '',
+                    allRights: false,
+                })
             }).catch((error) => {
                 setAdminErrorMessage(error.message)
             })
