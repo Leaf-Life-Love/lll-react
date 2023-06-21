@@ -4,6 +4,8 @@ import {useRouter} from "next/navigation";
 import {getAuth, signInWithPopup, OAuthProvider, getRedirectResult, onAuthStateChanged} from "firebase/auth";
 import {db} from "@/src/firebase/config";
 import {collection, query, doc, getDoc, getDocs, where, addDoc} from "firebase/firestore";
+//import timestamp
+import {serverTimestamp} from "firebase/firestore";
 
 export default function Page() {
     const auth = getAuth();
@@ -25,6 +27,7 @@ export default function Page() {
 
     const [plantFormData, setPlantFormData] = useState({
         name: '',
+        growDays: '',
         minPH: '',
         maxPH: '',
         minPPM: '',
@@ -92,6 +95,16 @@ export default function Page() {
                     </div>
                     {/*Plant details*/}
                     <div className="form-input-container">
+                        <label className="block mb-1 font-semibold text-center">Growing Time In Days</label>
+                        <input
+                            type={"number"}
+                            id={"growDays"}
+                            placeholder={"Days to grow"}
+                            className={"form-input mb-2"}
+                            required={true}
+                            onChange={(e) => handlePlantInput(e)}
+                            value={plantFormData.growDays}
+                        />
                         <label className="block mb-1 font-semibold text-center">PH</label>
                         <input
                             type={"number"} id={"minPH"} placeholder={"Min"}
@@ -168,6 +181,9 @@ export default function Page() {
 
     const handlePlantInput = () => {
         const name = document.getElementById("name").value
+
+        const growDays = document.getElementById("growDays").value
+
         const minPH = document.getElementById("minPH").value
         const maxPH = document.getElementById("maxPH").value
 
@@ -182,6 +198,7 @@ export default function Page() {
 
         setPlantFormData({
             name: name,
+            growDays: growDays,
             minPH: minPH,
             maxPH: maxPH,
             minPPM: minPPM,
@@ -198,6 +215,7 @@ export default function Page() {
         // Check if all fields are filled
         if (
             plantFormData.name === "" ||
+            plantFormData.growDays === "" ||
             plantFormData.minPH === "" ||
             plantFormData.maxPH === "" ||
             plantFormData.minPPM === "" ||
@@ -214,6 +232,7 @@ export default function Page() {
         // Check if all fields are numbers
         if (
             isNaN(plantFormData.minPH) ||
+            isNaN(plantFormData.growDays) ||
             isNaN(plantFormData.maxPH) ||
             isNaN(plantFormData.minPPM) ||
             isNaN(plantFormData.maxPPM) ||
@@ -228,6 +247,7 @@ export default function Page() {
 
         // Check if all fields are positive numbers
         if (
+            plantFormData.growDays < 0 ||
             plantFormData.minPH < 0 ||
             plantFormData.maxPH < 0 ||
             plantFormData.minPPM < 0 ||
@@ -261,6 +281,7 @@ export default function Page() {
             return;
         }
 
+
         // Add plant to firestore
         await addDoc(collection(db, 'Plants'), {
             Name: plantFormData.name,
@@ -272,6 +293,8 @@ export default function Page() {
             MaxEC: plantFormData.maxEC,
             MinTemp: plantFormData.minTemp,
             MaxTemp: plantFormData.maxTemp,
+            CreatedAT: serverTimestamp(),
+            GrowDays: plantFormData.growDays,
         })
             .then(() => {
                 // Plant added successfully
@@ -320,7 +343,8 @@ export default function Page() {
                     {/* Admin name */}
                     <div className="mb-4 flex flex-col items-center">
                         <label className="block mb-1 font-semibold">All Rights</label>
-                        <input type="checkbox" id="allRights" value={adminFormData.allRights} onChange={(e) => handleAdminInput(e)}/>
+                        <input type="checkbox" id="allRights" value={adminFormData.allRights}
+                               onChange={(e) => handleAdminInput(e)}/>
                     </div>
                     {/* Admin email */}
                     <div className="mb-4">
