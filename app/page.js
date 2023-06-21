@@ -17,6 +17,7 @@ import SensorChart from "@/src/components/charts/sensorChart";
 import './globals.css'
 import SensorData from "@/src/components/data/sensorData";
 import Loadingscreen from "@/src/components/loadingscreen";
+import Alert from "@/src/components/Alerts/Alert";
 
 export default function Home() {
     const context = useContext(AppContext);
@@ -30,6 +31,7 @@ export default function Home() {
     const [dataKeys, setDataKeys] = useState([]);
     const [FullRights, setFullRights] = useState(false);
     let loadingScreen = null;
+    const [errorMessage, setErrorMessage] = useState([]);
 
     provider.setCustomParameters({
         prompt: 'consent',
@@ -123,6 +125,17 @@ export default function Home() {
         setSensorInfo(si);
     }
 
+    const checkBoundaryDistance = (value, min, max, name) => {
+        if (value < (min + ((max - min) / 10))) {
+            return `${name} is te laag`;
+        }
+        if (value > (max - (max / 10))) {
+            return `${name} is te hoog`;
+        }
+
+        return false;
+    };
+
     useEffect(() => {
         //if logged in, check if admin
         // if (auth.currentUser) {
@@ -145,23 +158,61 @@ export default function Home() {
         getHistory()
     }, [auth]);
 
+    useEffect(() => {
+        const messages = [];
+        sensorInfo.forEach((v) => {
+            const sensorValue = latestValues[v.name];
+            const error = checkBoundaryDistance(sensorValue, v.min, v.max, v.name);
+
+            if (error) {
+                messages.push(error);
+            }
+        });
+        setErrorMessage(messages);
+    }, [latestValues, sensorInfo]);
+
+
     return (
         <main>
             <div className="data-container z-[200] flex overflow-auto flip2">
                 {sensorInfo.map((v, i) => {
-                    return <SensorData key={i} data={latestValues[v.name]} dataNames={v.name} min={v.min} max={v.max}
-                                       symbol={v.symbol} colorLeft={v.colorLeft} colorMid={v.colorMid}
-                                       colorRight={v.colorRight}/>
+                    const sensorValue = latestValues[v.name];
+
+                    return (
+                        <SensorData
+                            key={i}
+                            data={sensorValue}
+                            dataNames={v.name}
+                            min={v.min}
+                            max={v.max}
+                            symbol={v.symbol}
+                            colorLeft={v.colorLeft}
+                            colorMid={v.colorMid}
+                            colorRight={v.colorRight}
+                        />
+                    );
                 })}
                 <button className="flip-button" onClick={switchContainer}>&#8634;</button>
             </div>
             <div className="history-container hidden z-[100] flip">
                 {sensorInfo.map((v, i) => {
-                    return <SensorChart key={i} data={historyValues.map(value => value[v.name])} label={v.name}
-                                        date={historyDates}/>
+                    return (
+                        <SensorChart
+                            key={i}
+                            data={historyValues.map(value => value[v.name])}
+                            label={v.name}
+                            date={historyDates}
+                        />
+                    );
                 })}
-
                 <button className="flip-button" onClick={switchContainer}>&#8634;</button>
+            </div>
+            <div className="alert-container">
+                {errorMessage.map((message, index) => {
+                    return (
+                        <Alert key={index} type="error" message={"Pas op! " + message} />
+                    )
+            })}
             </div>
             <div id="canvas-container" className="scene">
                 <Canvas

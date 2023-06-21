@@ -320,3 +320,15 @@ input[type=number] {
     @apply
     w-[300px]
 }
+
+.alert-container {
+    @apply
+    w-1/2
+    absolute
+    bottom-1
+    right-2
+    overflow-auto
+    z-[200]
+    flex
+    flex-col
+}
