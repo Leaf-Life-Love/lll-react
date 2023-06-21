@@ -320,3 +320,18 @@ input[type=number] {
     @apply
     w-[300px]
 }
+
+.grow-container {
+    @apply
+    w-[200px]
+        h-2
+    bg-white
+    overflow-hidden
+}
+
+.grow-value {
+    @apply
+    h-full
+    z-50
+    bg-green-600
+}

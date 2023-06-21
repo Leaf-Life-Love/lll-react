@@ -293,7 +293,6 @@ export default function Page() {
             MaxEC: plantFormData.maxEC,
             MinTemp: plantFormData.minTemp,
             MaxTemp: plantFormData.maxTemp,
-            CreatedAT: serverTimestamp(),
             GrowDays: plantFormData.growDays,
         })
             .then(() => {
