@@ -116,7 +116,7 @@ export default function Plant(props) {
 
         if (created !== undefined && growDays !== undefined) {
             const diffTime = Math.abs(date - createdDate);
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) - 1;
             const progress = Math.round((diffDays / (GrowDays)) * 100);
             if (progress > 100) {
                 setProgress(100)
