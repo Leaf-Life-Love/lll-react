@@ -63,7 +63,7 @@ export default function Plant(props) {
                 setTimeout(() => {
                     setSuccessMessage("");
                     closeDialog();
-                }, 2000);
+                }, 200);
 
             }).catch((error) => {
                 setErrorMessage("Error bij plant toevoegen: ", error);
