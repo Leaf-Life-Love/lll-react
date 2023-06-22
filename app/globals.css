@@ -322,6 +322,25 @@ input[type=number] {
     w-[300px]
 }
 
+.grow-container {
+    @apply
+    w-[200px]
+    h-[15px]
+
+    overflow-hidden
+    shadow-md
+    mb-3
+    rounded
+    bg-gray-100
+}
+
+.grow-value {
+    @apply
+    h-full
+    z-50
+    bg-green-400
+}
+
 .alert-container {
     @apply
     w-1/2
@@ -332,4 +351,76 @@ input[type=number] {
     z-[200]
     flex
     flex-col
+}
+
+.plant-info-modal{
+    @apply
+    flex-col
+    items-center
+}
+
+.delete-button{
+    @apply
+    px-2
+        mb-2
+    rounded
+    bg-red-500
+    text-white
+}
+
+.info-title{
+    @apply
+    text-2xl
+    font-bold
+    mb-2
+}
+
+.info-item{
+    @apply
+    text-xl
+    mb-2
+}
+
+.info-close{
+    @apply
+    text-xl
+    font-bold
+    mb-2
+}
+
+.add-modal{
+    @apply
+    h-52
+    flex-col
+    items-center
+    justify-between
+}
+
+.add-title{
+    @apply
+    text-2xl
+    font-bold
+    mb-2
+}
+
+.add-name-select{
+    @apply
+    text-lg
+    mb-2
+}
+
+.add-button{
+    @apply
+    px-2
+    mb-2
+    rounded
+    bg-green-500
+    text-white
+}
+
+.add-close{
+    @apply
+    text-xl
+    font-bold
+    mb-2
 }
