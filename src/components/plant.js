@@ -4,6 +4,7 @@ import {MathUtils} from "three";
 import {db} from "@/src/firebase/config";
 import {collection, query, getDocs, addDoc, deleteDoc, doc, where, getDoc, onSnapshot} from "firebase/firestore";
 import AppContext from "@/src/context/AppContext";
+import Alert from "@/src/components/Alerts/Alert";
 
 export const DtR = (degrees) => {
     return MathUtils.degToRad(degrees);
@@ -130,7 +131,7 @@ export default function Plant(props) {
         }
 
         if (created && plantData) {
-            const GrowDays = plantData.GrowDays;
+            let GrowDays = plantData.GrowDays;
             const diffTime = Math.abs(date - createdDate);
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) - 1;
             const progress = Math.round((diffDays / GrowDays) * 100);
@@ -153,7 +154,6 @@ export default function Plant(props) {
             }
         };
     };
-
 
     useEffect(() => {
         const id = parseInt(props.name.slice(4));
@@ -232,17 +232,21 @@ export default function Plant(props) {
                         +
                     </Text>
                 </mesh>
-                {/*<Html*/}
-                {/*    as="div"*/}
-                {/*    position={[0, 0.15, -0.08]}*/}
-                {/*    rotation={[DtR(-90), 0, 0]}*/}
-                {/*    // visible={props.isVisible}*/}
-                {/*    style={{display: props.isVisible ? "block" : "none"}}*/}
-                {/*>*/}
-                {/*    <div className="grow-container">*/}
-                {/*        <div className="grow-value" style={{width: `${progress}%`}}/>*/}
-                {/*    </div>*/}
-                {/*</Html>*/}
+                <mesh
+                    position={[0, 0.22, 0]} visible={props.isVisible}
+                >
+                    {progress && progress >= 100 ?
+                        (
+                            <Text
+                                rotation={[DtR(-45), 0, 0]}
+                                scale={0.05}
+                                color="green"
+                            >
+                                Deze plant is volgroeid!
+                            </Text>
+                        ) : null
+                    }
+                </mesh>
             </group>
         </group>
     );
