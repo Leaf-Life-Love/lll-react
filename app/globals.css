@@ -87,8 +87,8 @@ body {
 
 .data-container {
     @apply
-    w-[300px]
-    h-[300px]
+    w-1/4
+    h-1/2
     bg-white
     rounded-lg
     border-2
@@ -179,8 +179,8 @@ body {
 
 .history-container {
     @apply
-    w-[300px]
-    h-[300px]
+    w-1/2
+    h-[95%]
     bg-white
     rounded-lg
     border-2
@@ -189,7 +189,8 @@ body {
     left-5
     top-5
     flex-col
-    overflow-auto
+    flex-wrap
+    overflow-x-auto
 }
 
 .flip-button {

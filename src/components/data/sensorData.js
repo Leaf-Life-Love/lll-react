@@ -27,7 +27,7 @@ function SensorData({data, dataNames, min, max, symbol, colorLeft, colorMid, col
     }
 
     return (
-        <div className="temp-container">
+        <div className={"temp-container"}>
             <div className="text-black absolute">{dataKeys}</div>
             <div className="outer-circle" style={{backgroundImage: `linear-gradient(to right,${leftColor},${midColor},${rightColor}`}}>
                 <div className="temp-value" style={{ transform: `rotate(${dataDeg(dataValues, minValue, maxValue)}deg)`}}>
