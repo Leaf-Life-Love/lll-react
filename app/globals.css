@@ -424,3 +424,16 @@ input[type=number] {
     font-bold
     mb-2
 }
+
+.login{
+    @apply
+    h-[25px]
+    w-[60px]
+    text-center
+    absolute
+    z-[100]
+    right-5
+    top-3
+    bg-blue-600
+    rounded
+}

@@ -247,7 +247,7 @@ export default function Page() {
 
         // Check if all fields are positive numbers
         if (
-            plantFormData.growDays < 0 ||
+            plantFormData.growDays < 1 ||
             plantFormData.minPH < 0 ||
             plantFormData.maxPH < 0 ||
             plantFormData.minPPM < 0 ||
