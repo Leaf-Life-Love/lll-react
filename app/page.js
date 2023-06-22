@@ -23,6 +23,7 @@ export default function Home() {
     const context = useContext(AppContext);
     const auth = getAuth();
     const provider = new OAuthProvider('microsoft.com');
+    const [user, setUser] = useState(null);
 
     const [latestValues, setLatestValues] = useState([]);
     const [historyValues, setHistoryValues] = useState([]);
@@ -171,6 +172,9 @@ export default function Home() {
         setErrorMessage(messages);
     }, [latestValues, sensorInfo]);
 
+    useEffect(() => {
+        setUser(auth.currentUser)
+    }, [auth.currentUser])
 
     return (
         <main>
@@ -207,13 +211,14 @@ export default function Home() {
                 })}
                 <button className="flip-button" onClick={switchContainer}>&#8634;</button>
             </div>
-            <div className="alert-container">
+            <div className="alert-container z-[100]">
                 {errorMessage.map((message, index) => {
                     return (
                         <Alert key={index} type="error" message={"Pas op! " + message} />
                     )
             })}
             </div>
+            <a className="login" onClick={handelLoginButton} style={{display: user ? "none" : "block"}}>Login</a>
             <div id="canvas-container" className="scene">
                 <Canvas
                     shadows={true}
@@ -227,7 +232,7 @@ export default function Home() {
                     <OrbitControls enableDamping={false} minPolarAngle={Math.PI / 2.5} maxPolarAngle={Math.PI - Math.PI}
                                    minDistance={1} maxDistance={20}/>
                     <Suspense fallback={loadingScreen}>
-                        <Text position={[8.7, -4, 10.01]} onClick={handelLoginButton} visible={!auth.currentUser}>Login</Text>
+                        {/*<Text position={[8.7, -4, 10.01]} onClick={handelLoginButton} visible={!auth.currentUser}>Login</Text>*/}
                         {/*<gridHelper args={[20, 20]}/>*/}
                         {/*<axesHelper args={[50]}/>*/}
                         <ambientLight intensity={0.2} color={"white"}/>
