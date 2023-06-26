@@ -6,7 +6,7 @@ import {Canvas} from '@react-three/fiber'
 import JsonFind from 'json-find'
 import {db} from "@/src/firebase/config";
 import {collection, query, doc, getDoc, getDocs, where, limit, onSnapshot, orderBy} from "firebase/firestore";
-// import {Perf} from 'r3f-perf'
+import {Perf} from 'r3f-perf'
 import AppContext from "@/src/context/AppContext";
 
 import Floor from '@/src/components/Meshes/floor'
@@ -228,7 +228,7 @@ export default function Home() {
                         state.setEvents({filter: (intersections) => intersections.filter(i => i.object.visible)})
                     }}
                 >
-                    {/*<Perf position={"top-right"}/>*/}
+                    <Perf position={"top-right"}/>
                     <OrbitControls enableDamping={false} minPolarAngle={Math.PI / 2.5} maxPolarAngle={Math.PI - Math.PI}
                                    minDistance={1} maxDistance={20}/>
                     <Suspense fallback={loadingScreen}>

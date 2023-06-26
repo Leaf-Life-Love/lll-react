@@ -4,7 +4,9 @@ import {MathUtils} from "three";
 import {db} from "@/src/firebase/config";
 import {collection, query, getDocs, addDoc, deleteDoc, doc, where, getDoc, onSnapshot} from "firebase/firestore";
 import AppContext from "@/src/context/AppContext";
-import Alert from "@/src/components/Alerts/Alert";
+import {useLoader} from "@react-three/fiber";
+import {GLTFLoader} from "three/examples/jsm/loaders/GLTFLoader";
+
 
 export const DtR = (degrees) => {
     return MathUtils.degToRad(degrees);
@@ -13,6 +15,8 @@ export const DtR = (degrees) => {
 export default function Plant(props) {
     const context = useContext(AppContext);
     const isAdmin = context.isAdmin;
+
+    const model = useLoader(GLTFLoader, "/models/groot.glb");
 
     const [potId, setPotId] = useState();
     const [plantNames, setPlantNames] = useState([]);
@@ -220,6 +224,7 @@ export default function Plant(props) {
                 >
                     <sphereGeometry args={[0.03, 32, 32]}/>
                     <meshStandardMaterial color="green"/>
+                    {/*<primitive object={model.scene} scale={1}/>*/}
                 </mesh>
                 <mesh position={[0, 0.15, 0]} visible={!props.isVisible && isAdmin}>
                     <Text
