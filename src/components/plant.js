@@ -6,7 +6,7 @@ import {collection, query, getDocs, addDoc, deleteDoc, doc, where, getDoc, onSna
 import AppContext from "@/src/context/AppContext";
 import {useLoader} from "@react-three/fiber";
 import {GLTFLoader} from "three/examples/jsm/loaders/GLTFLoader";
-
+// import PlantModel from "@/src/components/Meshes/plant-model";
 
 export const DtR = (degrees) => {
     return MathUtils.degToRad(degrees);
@@ -224,7 +224,7 @@ export default function Plant(props) {
                 >
                     <sphereGeometry args={[0.03, 32, 32]}/>
                     <meshStandardMaterial color="green"/>
-                    {/*<primitive object={model.scene} scale={1}/>*/}
+                    {/*<PlantModel/>*/}
                 </mesh>
                 <mesh position={[0, 0.15, 0]} visible={!props.isVisible && isAdmin}>
                     <Text
