@@ -179,8 +179,8 @@ body {
 
 .history-container {
     @apply
-    w-1/2
-    h-[95%]
+    w-1/4
+    h-1/2
     bg-white
     rounded-lg
     border-2

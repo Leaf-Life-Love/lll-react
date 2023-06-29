@@ -28,7 +28,6 @@ export default function Home() {
     const [historyDates, setHistoryDates] = useState([]);
     const [sensorInfo, setSensorInfo] = useState([]);
     const [dataKeys, setDataKeys] = useState([]);
-    const [FullRights, setFullRights] = useState(false);
     let loadingScreen = null;
     const [errorMessage, setErrorMessage] = useState([]);
 
