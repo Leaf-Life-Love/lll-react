@@ -1,6 +1,6 @@
 'use client'
 import React, {Suspense, useEffect, useState, useContext} from "react";
-import {getAuth, signInWithPopup, OAuthProvider, getRedirectResult,} from "firebase/auth";
+import {getAuth, signInWithPopup, OAuthProvider, GoogleAuthProvider, getRedirectResult,} from "firebase/auth";
 import {Text, Loader, OrbitControls} from "@react-three/drei";
 import {Canvas} from '@react-three/fiber'
 import {db} from "@/src/firebase/config";
@@ -20,7 +20,8 @@ import Alert from "@/src/components/Alerts/Alert";
 export default function Home() {
     const context = useContext(AppContext);
     const auth = getAuth();
-    const provider = new OAuthProvider('microsoft.com');
+    // const provider = new OAuthProvider('microsoft.com');
+    const provider = new GoogleAuthProvider();
     const [user, setUser] = useState(null);
 
     const [latestValues, setLatestValues] = useState([]);
@@ -31,11 +32,11 @@ export default function Home() {
     let loadingScreen = null;
     const [errorMessage, setErrorMessage] = useState([]);
 
-    provider.setCustomParameters({
-        prompt: 'consent',
-        tenant: 'e8e5eb49-74bd-45b9-905a-1193cb5a9913',
-    });
-    provider.addScope('User.Read');
+    // provider.setCustomParameters({
+    //     prompt: 'consent',
+    //     tenant: 'e8e5eb49-74bd-45b9-905a-1193cb5a9913',
+    // });
+    // provider.addScope('User.Read');
 
     useEffect(() => {
         loadingScreen = <Loadingscreen/>
@@ -43,6 +44,24 @@ export default function Home() {
 
     const handelLoginButton = () => {
         signInWithPopup(auth, provider)
+            .then((result) => {
+                // This gives you a Google Access Token. You can use it to access the Google API.
+                const credential = GoogleAuthProvider.credentialFromResult(result);
+                const token = credential.accessToken;
+                // The signed-in user info.
+                const user = result.user;
+                // IdP data available using getAdditionalUserInfo(result)
+                // ...
+            }).catch((error) => {
+            // Handle Errors here.
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            // The email of the user's account used.
+            const email = error.customData.email;
+            // The AuthCredential type that was used.
+            const credential = GoogleAuthProvider.credentialFromError(error);
+            // ...
+        });
     }
 
     const switchContainer = () => {
