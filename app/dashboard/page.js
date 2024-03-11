@@ -1,7 +1,14 @@
 "use client"
 import React, {useEffect, useState} from "react";
 import {useRouter} from "next/navigation";
-import {getAuth, signInWithPopup, OAuthProvider, getRedirectResult, onAuthStateChanged} from "firebase/auth";
+import {
+    getAuth,
+    signInWithPopup,
+    OAuthProvider,
+    getRedirectResult,
+    onAuthStateChanged,
+    GoogleAuthProvider
+} from "firebase/auth";
 import {db} from "@/src/firebase/config";
 import {collection, query, doc, getDoc, getDocs, where, addDoc} from "firebase/firestore";
 //import timestamp
@@ -10,7 +17,8 @@ import {serverTimestamp} from "firebase/firestore";
 export default function Page() {
     const auth = getAuth();
     const router = useRouter();
-    const provider = new OAuthProvider('microsoft.com');
+    // const provider = new OAuthProvider('microsoft.com');
+    const provider = new GoogleAuthProvider();
     const [isAdmin, setIsAdmin] = useState(false);
     const [allRights, setAllRights] = useState(false);
 
@@ -52,11 +60,11 @@ export default function Page() {
         return () => unsubscribe()
     });
 
-    provider.setCustomParameters({
+    /*provider.setCustomParameters({
         prompt: 'consent',
         tenant: 'e8e5eb49-74bd-45b9-905a-1193cb5a9913',
     });
-    provider.addScope('User.Read');
+    provider.addScope('User.Read');*/
 
     const checkAdmin = async () => {
         const user = auth.currentUser;
